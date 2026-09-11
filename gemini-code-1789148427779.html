@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Magic Rainbow Scratchbook — Gravitational Black Hole God Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #050508;
+  --panel-bg: rgba(13, 15, 24, 0.85);
+  --border-glow: rgba(147, 51, 234, 0.4);
+  --accent-purple: #9333ea;
+  --accent-cyan: #06b6d4;
+  --accent-gold: #f59e0b;
+  --accent-magenta: #ec4899;
+  --text-main: #f3f4f6;
+  --text-dim: #9ca3af;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-main);
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: rgba(8, 9, 14, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-vortex {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #000 32%, #9333ea 68%, #06b6d4 100%);
+  box-shadow: 0 0 16px rgba(147, 51, 234, 0.8), inset 0 0 8px rgba(0, 0, 0, 0.9);
+  animation: spinSlow 8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.title-box h1 {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.1rem;
+  letter-spacing: 1.5px;
+  background: linear-gradient(90deg, #ffffff, #c084fc, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title-box span {
+  font-size: 0.68rem;
+  color: var(--accent-gold);
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  display: block;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-god {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.35), rgba(6, 182, 212, 0.35));
+  border: 1px solid rgba(192, 132, 252, 0.6);
+  box-shadow: 0 0 16px rgba(147, 51, 234, 0.4);
+  color: #fff;
+  font-weight: 700;
+}
+
+.btn-god:hover {
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.7);
+  border-color: #38bdf8;
+}
+
+.btn-god.active {
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
+  box-shadow: 0 0 28px rgba(147, 51, 234, 0.9);
+  border-color: #fff;
+}
+
+.toolbar-container {
+  position: absolute;
+  top: 66px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel-bg);
+  padding: 5px 8px;
+  border-radius: 40px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  max-width: 95vw;
+  overflow-x: auto;
+}
+
+.tool-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tool-pill:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tool-pill.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+}
+
+.tool-pill.active.tool-vortex {
+  background: radial-gradient(circle at center, #1e1b4b, #090916);
+  border-color: #a855f7;
+  color: #e9d5ff;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.7), inset 0 0 8px #9333ea;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.size-pill {
+  padding: 4px 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.72rem;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-dim);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.size-pill:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.size-pill.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+#viewport {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+#rainbowCanvas {
+  z-index: 5;
+}
+
+#scratchCanvas {
+  z-index: 10;
+}
+
+#fxCanvas {
+  z-index: 20;
+  pointer-events: none;
+}
+
+.god-panel {
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  width: 320px;
+  background: rgba(10, 11, 20, 0.92);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(147, 51, 234, 0.3);
+  border-radius: 16px;
+  padding: 18px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transform: translateX(380px);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.god-panel.open {
+  transform: translateX(0);
+}
+
+.god-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.god-header h2 {
+  font-size: 0.9rem;
+  color: #c084fc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.god-close {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.god-close:hover {
+  color: #fff;
+}
+
+.god-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.god-group label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  display: flex;
+  justify-content: space-between;
+}
+
+.god-group label span {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #1e293b;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7, #06b6d4);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+  transition: transform 0.1s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.god-act-btn {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  padding: 8px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.god-act-btn:hover {
+  background: rgba(147, 51, 234, 0.3);
+  border-color: #a855f7;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.god-act-btn:active {
+  transform: translateY(1px);
+}
+
+.info-footer {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  background: rgba(8, 9, 14, 0.78);
+  backdrop-filter: blur(14px);
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  color: #94a3b8;
+  display: flex;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 95vw;
+  overflow-x: auto;
+}
+
+.info-footer kbd {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.toast-notice {
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(15, 23, 42, 0.95);
+  color: #f8fafc;
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(168, 85, 247, 0.4);
+}
+
+.toast-notice.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 6px 12px;
+  }
+  .title-box h1 {
+    font-size: 0.92rem;
+  }
+  .title-box span {
+    display: none;
+  }
+  .toolbar-container {
+    top: 56px;
+  }
+  .info-footer {
+    display: none;
+  }
+  .god-panel {
+    width: 290px;
+    right: 10px;
+    top: 100px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo-vortex"></div>
+    <div class="title-box">
+      <h1>MAGIC RAINBOW SCRATCHBOOK</h1>
+      <span>DEVELOPER GOD MODE // GRAVITATIONAL SINGULARITY</span>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="btn" id="soundBtn">🔊 Audio: ON</button>
+    <button class="btn" id="undoBtn">↩️ Undo [Ctrl+Z]</button>
+    <button class="btn" id="redoBtn">↪️ Redo [Ctrl+Y]</button>
+    <button class="btn" id="clearBtn">✨ Reset [C]</button>
+    <button class="btn" id="saveBtn">💾 Save PNG</button>
+    <button class="btn btn-god" id="godBtn">⚡ GOD MODE [G]</button>
+  </div>
+</header>
+
+<div class="toolbar-container">
+  <button class="tool-pill active tool-vortex" data-tool="vortex">🌀 Black Hole Vortex</button>
+  <button class="tool-pill" data-tool="wand">🪄 Elder Wand</button>
+  <button class="tool-pill" data-tool="unicorn">🦄 Unicorn Horn</button>
+  <button class="tool-pill" data-tool="pen">✒️ Antique Pen</button>
+  <button class="tool-pill" data-tool="hammer">⚡ Mjölnir</button>
+  
+  <div class="divider"></div>
+  <button class="size-pill" data-size="14">S</button>
+  <button class="size-pill active" data-size="32">M</button>
+  <button class="size-pill" data-size="60">L</button>
+  <button class="size-pill" data-size="110">SINGULARITY</button>
+</div>
+
+<div id="viewport">
+  <canvas id="rainbowCanvas"></canvas>
+  <canvas id="scratchCanvas"></canvas>
+  <canvas id="fxCanvas"></canvas>
+</div>
+
+<div class="toast-notice" id="toastNotice">Notification</div>
+
+<div class="info-footer">
+  <span><kbd>Click & Drag</kbd> Scratch Rainbow</span>
+  <span><kbd>Vortex Hold Still</kbd> Charge Singularity (Release = Supernova Blast)</span>
+  <span><kbd>B</kbd> Roaming Vortex</span>
+  <span><kbd>H</kbd> Supernova</span>
+</div>
+
+<!-- Developer God Mode HUD -->
+<aside class="god-panel" id="godPanel">
+  <div class="god-header">
+    <h2>⚡ SINGULARITY GOD PANEL</h2>
+    <button class="god-close" id="godClose" title="Close Panel">✕</button>
+  </div>
+
+  <div class="god-group">
+    <label>GRAVITY PULL: <span id="valGravity">2.4x</span></label>
+    <input type="range" class="slider" id="slGravity" min="0.5" max="6.0" step="0.1" value="2.4">
+  </div>
+
+  <div class="god-group">
+    <label>VORTEX SWIRL SPEED: <span id="valSwirl">1.8x</span></label>
+    <input type="range" class="slider" id="slSwirl" min="0.2" max="4.0" step="0.1" value="1.8">
+  </div>
+
+  <div class="god-group">
+    <label>ACCRETION PARTICLES: <span id="valParticles">180</span></label>
+    <input type="range" class="slider" id="slParticles" min="40" max="450" step="10" value="180">
+  </div>
+
+  <div class="god-group">
+    <label>BRUSH SIZE: <span id="valBrushSize">32px</span></label>
+    <input type="range" class="slider" id="slBrushSize" min="6" max="150" step="2" value="32">
+  </div>
+
+  <div class="god-group">
+    <label>RAINBOW THEME</label>
+    <select id="selTheme" class="btn" style="width:100%; padding:8px; font-family:inherit; background:#0f172a; color:#fff;">
+      <option value="cosmic">Cosmic Prismatic Aurora</option>
+      <option value="cyber">Cyberpunk Neon Matrix</option>
+      <option value="solar">Solar Flare / Event Horizon</option>
+      <option value="deepspace">Deep Space Violet & Cyan</option>
+      <option value="hologram">Holographic Rainbow Foil</option>
+    </select>
+  </div>
+
+  <div class="action-grid">
+    <button class="god-act-btn" id="actRoam">
+      <span>🚀 ROAMING VORTEX</span>
+      <small>[B] Autonomous Art</small>
+    </button>
+    <button class="god-act-btn" id="actNova">
+      <span>💥 SUPERNOVA BLAST</span>
+      <small>[H] Shockwave</small>
+    </button>
+    <button class="god-act-btn" id="actInvert">
+      <span>☯ INVERT REALITY</span>
+      <small id="lblInvert">Carve Light</small>
+    </button>
+    <button class="god-act-btn" id="actShower">
+      <span>🌠 METEOR SHOWER</span>
+      <small>[M] Scratch Rain</small>
+    </button>
+    <button class="god-act-btn" id="actImplode" style="grid-column: span 2;">
+      <span>🕳️ VOID RESET IMPLOSION</span>
+      <small>Gravitational Collapse & Reset</small>
+    </button>
+  </div>
+</aside>
+
+<script>
+// Canvas & Context References
+const viewport = document.getElementById("viewport");
+const rainbowCanvas = document.getElementById("rainbowCanvas");
+const scratchCanvas = document.getElementById("scratchCanvas");
+const fxCanvas = document.getElementById("fxCanvas");
+const toastNotice = document.getElementById("toastNotice");
+
+const ctxRainbow = rainbowCanvas.getContext("2d");
+const ctxScratch = scratchCanvas.getContext("2d");
+const ctxFx = fxCanvas.getContext("2d");
+
+let width = 0, height = 0;
+let dpr = 1;
+let isPointerDown = false;
+let pointerId = null;
+
+// Drawing & tracking coordinates
+let lastX = 0, lastY = 0;
+let prevX = 0, prevY = 0;
+let stillFrames = 0;
+let anchorX = 0, anchorY = 0;
+let currentTool = "vortex";
+let brushRadius = 32;
+let soundEnabled = true;
+
+// God Mode Parameters
+const god = {
+  gravity: 2.4,
+  swirl: 1.8,
+  particlesMax: 180,
+  theme: "cosmic",
+  isInverted: false
+};
+
+// Undo / Redo Stacks
+const undoStack = [];
+const redoStack = [];
+const MAX_UNDO = 16;
+
+// Notification Toast
+let toastTimer = null;
+function showToast(msg) {
+  toastNotice.textContent = msg;
+  toastNotice.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastNotice.classList.remove("show");
+  }, 2200);
+}
+
+// Web Audio Synthesizer Engine
+let audioCtx = null;
+function initAudio() {
+  if (!soundEnabled) return;
+  try {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) audioCtx = new AudioContextClass();
+    }
+    if (audioCtx && audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+  } catch (e) {}
+}
+
+function playCosmicDrone(freq, gainVal = 0.04, duration = 0.16) {
+  if (!soundEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
+  try {
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, t);
+    gain.gain.setValueAtTime(gainVal, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + duration);
+  } catch (e) {}
+}
+
+function playSupernovaSound() {
+  if (!soundEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
+  try {
+    const t = audioCtx.currentTime;
+    const oscSub = audioCtx.createOscillator();
+    const gainSub = audioCtx.createGain();
+    oscSub.type = "sawtooth";
+    oscSub.frequency.setValueAtTime(140, t);
+    oscSub.frequency.exponentialRampToValueAtTime(25, t + 0.9);
+    gainSub.gain.setValueAtTime(0.35, t);
+    gainSub.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+    oscSub.connect(gainSub);
+    gainSub.connect(audioCtx.destination);
+    oscSub.start(t);
+    oscSub.stop(t + 0.9);
+
+    const bufferSize = audioCtx.sampleRate * 0.6;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1800, t);
+    filter.frequency.exponentialRampToValueAtTime(80, t + 0.6);
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.setValueAtTime(0.2, t);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+    noise.start(t);
+    noise.stop(t + 0.6);
+  } catch (e) {}
+}
+
+function playToolSound(tool) {
+  if (!soundEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
+  try {
+    const t = audioCtx.currentTime;
+    if (tool === "wand") {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      const notes = [587.33, 659.25, 783.99, 880.0, 1046.5];
+      const freq = notes[Math.floor(Math.random() * notes.length)];
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.06, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.25);
+    } else if (tool === "unicorn") {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(880 + Math.random() * 400, t);
+      gain.gain.setValueAtTime(0.05, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.18);
+    } else if (tool === "hammer") {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(80 + Math.random() * 60, t);
+      gain.gain.setValueAtTime(0.07, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.12);
+    } else if (tool === "pen") {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(320 + Math.random() * 80, t);
+      gain.gain.setValueAtTime(0.02, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.08);
+    }
+  } catch (e) {}
+}
+
+// Window Resize Handling & Canvas Setup
+let isInitialized = false;
+
+function resize() {
+  const newWidth = viewport.clientWidth || window.innerWidth;
+  const newHeight = viewport.clientHeight || (window.innerHeight - 60);
+  dpr = window.devicePixelRatio || 1;
+
+  if (newWidth <= 0 || newHeight <= 0) return;
+
+  let backupCanvas = null;
+  if (isInitialized && width > 0 && height > 0) {
+    backupCanvas = document.createElement("canvas");
+    backupCanvas.width = scratchCanvas.width;
+    backupCanvas.height = scratchCanvas.height;
+    const bCtx = backupCanvas.getContext("2d");
+    bCtx.drawImage(scratchCanvas, 0, 0);
+  }
+
+  width = newWidth;
+  height = newHeight;
+
+  [rainbowCanvas, scratchCanvas, fxCanvas].forEach(c => {
+    c.width = width * dpr;
+    c.height = height * dpr;
+    c.style.width = width + "px";
+    c.style.height = height + "px";
+    const ctx = c.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  });
+
+  drawRainbowBackground();
+
+  if (backupCanvas) {
+    ctxScratch.save();
+    ctxScratch.setTransform(1, 0, 0, 1, 0, 0);
+    ctxScratch.drawImage(backupCanvas, 0, 0, backupCanvas.width, backupCanvas.height, 0, 0, scratchCanvas.width, scratchCanvas.height);
+    ctxScratch.restore();
+  } else {
+    initMatteScratchLayer();
+    isInitialized = true;
+  }
+}
+
+// Prismatic Underlayer Generation
+function drawRainbowBackground() {
+  ctxRainbow.save();
+  const g = ctxRainbow.createLinearGradient(0, 0, width, height);
+
+  if (god.theme === "cosmic") {
+    g.addColorStop(0.0, "#ff007f");
+    g.addColorStop(0.18, "#9333ea");
+    g.addColorStop(0.38, "#2563eb");
+    g.addColorStop(0.58, "#06b6d4");
+    g.addColorStop(0.78, "#10b981");
+    g.addColorStop(0.92, "#facc15");
+    g.addColorStop(1.0, "#f97316");
+  } else if (god.theme === "cyber") {
+    g.addColorStop(0.0, "#00ffcc");
+    g.addColorStop(0.28, "#0066ff");
+    g.addColorStop(0.65, "#ff0099");
+    g.addColorStop(0.85, "#ff0055");
+    g.addColorStop(1.0, "#ffff00");
+  } else if (god.theme === "solar") {
+    g.addColorStop(0.0, "#7f1d1d");
+    g.addColorStop(0.25, "#dc2626");
+    g.addColorStop(0.55, "#ea580c");
+    g.addColorStop(0.8, "#f59e0b");
+    g.addColorStop(1.0, "#ffffff");
+  } else if (god.theme === "deepspace") {
+    g.addColorStop(0.0, "#1e1b4b");
+    g.addColorStop(0.3, "#4338ca");
+    g.addColorStop(0.65, "#06b6d4");
+    g.addColorStop(0.85, "#a855f7");
+    g.addColorStop(1.0, "#ec4899");
+  } else if (god.theme === "hologram") {
+    g.addColorStop(0.0, "#f43f5e");
+    g.addColorStop(0.2, "#fb923c");
+    g.addColorStop(0.4, "#a3e635");
+    g.addColorStop(0.6, "#22d3ee");
+    g.addColorStop(0.8, "#818cf8");
+    g.addColorStop(1.0, "#f472b6");
+  }
+
+  ctxRainbow.fillStyle = g;
+  ctxRainbow.fillRect(0, 0, width, height);
+
+  for (let i = 0; i < 4; i++) {
+    const nx = ((i * 373) % width);
+    const ny = ((i * 541) % height);
+    const rad = Math.min(width, height) * 0.45;
+    const radG = ctxRainbow.createRadialGradient(nx, ny, 10, nx, ny, rad);
+    radG.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+    radG.addColorStop(0.5, "rgba(147, 51, 234, 0.1)");
+    radG.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctxRainbow.fillStyle = radG;
+    ctxRainbow.beginPath();
+    ctxRainbow.arc(nx, ny, rad, 0, Math.PI * 2);
+    ctxRainbow.fill();
+  }
+
+  ctxRainbow.fillStyle = "rgba(255, 255, 255, 0.65)";
+  for (let i = 0; i < 110; i++) {
+    const rx = (Math.sin(i * 127.1) * 0.5 + 0.5) * width;
+    const ry = (Math.cos(i * 311.7) * 0.5 + 0.5) * height;
+    const starSize = ((i % 5) === 0) ? 2.5 : 1.2;
+    ctxRainbow.beginPath();
+    ctxRainbow.arc(rx, ry, starSize, 0, Math.PI * 2);
+    ctxRainbow.fill();
+  }
+
+  ctxRainbow.restore();
+}
+
+// Matte Scratch Layer Setup
+function initMatteScratchLayer() {
+  ctxScratch.save();
+  ctxScratch.setTransform(1, 0, 0, 1, 0, 0);
+  ctxScratch.fillStyle = "#0a0b10";
+  ctxScratch.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+  const pCount = Math.floor((scratchCanvas.width * scratchCanvas.height) / 1200);
+  ctxScratch.fillStyle = "rgba(255, 255, 255, 0.03)";
+  for (let i = 0; i < pCount; i++) {
+    const px = Math.random() * scratchCanvas.width;
+    const py = Math.random() * scratchCanvas.height;
+    ctxScratch.fillRect(px, py, 1.5, 1.5);
+  }
+
+  ctxScratch.restore();
+  saveState();
+}
+
+function saveState() {
+  redoStack.length = 0;
+  if (undoStack.length >= MAX_UNDO) undoStack.shift();
+  const snapshot = document.createElement("canvas");
+  snapshot.width = scratchCanvas.width;
+  snapshot.height = scratchCanvas.height;
+  const sCtx = snapshot.getContext("2d");
+  sCtx.drawImage(scratchCanvas, 0, 0);
+  undoStack.push(snapshot);
+}
+
+function undo() {
+  if (undoStack.length > 1) {
+    const current = undoStack.pop();
+    redoStack.push(current);
+    const prev = undoStack[undoStack.length - 1];
+    ctxScratch.save();
+    ctxScratch.setTransform(1, 0, 0, 1, 0, 0);
+    ctxScratch.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+    ctxScratch.drawImage(prev, 0, 0);
+    ctxScratch.restore();
+    showToast("↩️ Undo");
+  } else {
+    showToast("Nothing to undo");
+  }
+}
+
+function redo() {
+  if (redoStack.length > 0) {
+    const next = redoStack.pop();
+    undoStack.push(next);
+    ctxScratch.save();
+    ctxScratch.setTransform(1, 0, 0, 1, 0, 0);
+    ctxScratch.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+    ctxScratch.drawImage(next, 0, 0);
+    ctxScratch.restore();
+    showToast("↪️ Redo");
+  } else {
+    showToast("Nothing to redo");
+  }
+}
+
+// Particle System
+class Particle {
+  constructor(x, y, vx, vy, color, size, life, isVortex = false) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.color = color;
+    this.size = size;
+    this.maxLife = life;
+    this.life = life;
+    this.isVortex = isVortex;
+  }
+
+  update(targetX, targetY) {
+    if (this.isVortex && isPointerDown) {
+      const dx = targetX - this.x;
+      const dy = targetY - this.y;
+      const dist = Math.hypot(dx, dy) || 1;
+
+      const force = (god.gravity * 380) / (dist + 35);
+      const ax = (dx / dist) * force;
+      const ay = (dy / dist) * force;
+
+      const swirlForce = god.swirl * 2.4;
+      const tx = (-dy / dist) * swirlForce;
+      const ty = (dx / dist) * swirlForce;
+
+      this.vx = (this.vx + ax + tx) * 0.94;
+      this.vy = (this.vy + ay + ty) * 0.94;
+
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (dist < 10) {
+        this.life = 0;
+      }
+    } else {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vx *= 0.96;
+      this.vy *= 0.96;
+    }
+    this.life--;
+  }
+
+  draw(ctx) {
+    const alpha = Math.max(0, this.life / this.maxLife);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, Math.max(0.5, this.size * alpha), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+let particles = [];
+let roamingHoles = [];
+let lightningBolts = [];
+
+// Scratch Stroke Logic
+function scratchSegment(x1, y1, x2, y2, radius) {
+  ctxScratch.save();
+  ctxScratch.globalCompositeOperation = god.isInverted ? "source-over" : "destination-out";
+  ctxScratch.fillStyle = god.isInverted ? "#0a0b10" : "#000000";
+  ctxScratch.strokeStyle = god.isInverted ? "#0a0b10" : "#000000";
+  ctxScratch.lineWidth = radius * 2;
+  ctxScratch.lineCap = "round";
+  ctxScratch.lineJoin = "round";
+
+  ctxScratch.beginPath();
+  ctxScratch.moveTo(x1, y1);
+  ctxScratch.lineTo(x2, y2);
+  ctxScratch.stroke();
+
+  ctxScratch.beginPath();
+  ctxScratch.arc(x2, y2, radius, 0, Math.PI * 2);
+  ctxScratch.fill();
+  ctxScratch.restore();
+}
+
+function performToolScratch(x1, y1, x2, y2) {
+  const dist = Math.hypot(x2 - x1, y2 - y1);
+
+  if (currentTool === "pen") {
+    const speed = Math.min(25, dist);
+    const penRadius = Math.max(3, brushRadius * (1.1 - speed / 32));
+    scratchSegment(x1, y1, x2, y2, penRadius);
+    if (Math.random() < 0.25) playToolSound("pen");
+    return;
+  }
+
+  scratchSegment(x1, y1, x2, y2, brushRadius);
+
+  if (currentTool === "wand") {
+    if (Math.random() < 0.3) playToolSound("wand");
+    for (let i = 0; i < 2; i++) {
+      const offsetX = (Math.random() - 0.5) * brushRadius * 1.5;
+      const offsetY = (Math.random() - 0.5) * brushRadius * 1.5;
+      particles.push(new Particle(x2 + offsetX, y2 + offsetY, (Math.random() - 0.5) * 4, -Math.random() * 3.5, "#fde047", 2.5, 45));
+    }
+  } else if (currentTool === "unicorn") {
+    if (Math.random() < 0.3) playToolSound("unicorn");
+    const colors = ["#f472b6", "#c084fc", "#67e8f9", "#fde047", "#ffffff"];
+    for (let i = 0; i < 2; i++) {
+      const col = colors[Math.floor(Math.random() * colors.length)];
+      particles.push(new Particle(x2, y2, (Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3, col, Math.random() * 3 + 1, 55));
+    }
+  } else if (currentTool === "hammer") {
+    if (Math.random() < 0.4) playToolSound("hammer");
+    if (dist > 8 || Math.random() < 0.3) {
+      lightningBolts.push({
+        x1: x2,
+        y1: y2,
+        x2: x2 + (Math.random() - 0.5) * (brushRadius * 2.8),
+        y2: y2 + (Math.random() - 0.5) * (brushRadius * 2.8),
+        life: 14,
+        maxLife: 14
+      });
+    }
+  } else if (currentTool === "vortex") {
+    spawnAccretionParticles(x2, y2, 3);
+  }
+}
+
+// Supernova Shockwave (Instant Blast)
+function triggerSupernova(x, y, radius = 180) {
+  playSupernovaSound();
+
+  ctxScratch.save();
+  ctxScratch.globalCompositeOperation = god.isInverted ? "source-over" : "destination-out";
+  const blastGrad = ctxScratch.createRadialGradient(x, y, 10, x, y, radius);
+  if (god.isInverted) {
+    blastGrad.addColorStop(0, "rgba(10, 11, 16, 1)");
+    blastGrad.addColorStop(0.8, "rgba(10, 11, 16, 0.9)");
+    blastGrad.addColorStop(1, "rgba(10, 11, 16, 0)");
+  } else {
+    blastGrad.addColorStop(0, "rgba(0, 0, 0, 1)");
+    blastGrad.addColorStop(0.8, "rgba(0, 0, 0, 0.9)");
+    blastGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+  }
+  ctxScratch.fillStyle = blastGrad;
+  ctxScratch.beginPath();
+  ctxScratch.arc(x, y, radius, 0, Math.PI * 2);
+  ctxScratch.fill();
+  ctxScratch.restore();
+
+  const colors = ["#c084fc", "#38bdf8", "#f43f5e", "#facc15", "#4ade80", "#ffffff"];
+  const burstCount = Math.min(260, god.particlesMax + 60);
+  for (let i = 0; i < burstCount; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 16 + 4;
+    const vx = Math.cos(angle) * speed;
+    const vy = Math.sin(angle) * speed;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    particles.push(new Particle(x, y, vx, vy, color, Math.random() * 4 + 1.5, Math.random() * 45 + 30));
+  }
+
+  showToast("💥 Hawking Supernova Shockwave!");
+}
+
+function triggerMeteorShower() {
+  showToast("🌠 Meteor Starlight Shower!");
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const startX = Math.random() * width;
+      const startY = -10;
+      const length = Math.random() * 140 + 80;
+      const angle = Math.PI / 4 + (Math.random() - 0.5) * 0.3;
+      const endX = startX + Math.cos(angle) * length;
+      const endY = startY + Math.sin(angle) * length;
+
+      scratchSegment(startX, startY, endX, endY, Math.random() * 8 + 3);
+
+      for (let p = 0; p < 8; p++) {
+        particles.push(new Particle(
+          endX + (Math.random() - 0.5) * 20,
+          endY + (Math.random() - 0.5) * 20,
+          (Math.random() - 0.5) * 6,
+          (Math.random() - 0.5) * 6,
+          "#facc15",
+          Math.random() * 3 + 1,
+          40
+        ));
+      }
+      playToolSound("wand");
+    }, i * 70);
+  }
+}
+
+function spawnAccretionParticles(cx, cy, count = 4) {
+  const colors = ["#a855f7", "#38bdf8", "#ec4899", "#f59e0b", "#67e8f9", "#ffffff"];
+  for (let i = 0; i < count; i++) {
+    if (particles.length > god.particlesMax) break;
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * (brushRadius * 2.2) + 25;
+    const px = cx + Math.cos(angle) * dist;
+    const py = cy + Math.sin(angle) * dist;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    particles.push(new Particle(px, py, (Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3, color, Math.random() * 3 + 1, 75, true));
+  }
+}
+
+// 60 FPS Animation Loop
+let frameCount = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  frameCount++;
+  ctxFx.clearRect(0, 0, width, height);
+
+  if (isPointerDown) {
+    const distMoved = Math.hypot(lastX - anchorX, lastY - anchorY);
+    if (distMoved < 6) {
+      stillFrames++;
+    } else {
+      stillFrames = 0;
+      anchorX = lastX;
+      anchorY = lastY;
+    }
+
+    if (currentTool === "vortex") {
+      spawnAccretionParticles(lastX, lastY, 2);
+
+      const chargeRatio = Math.min(1, stillFrames / 50);
+      const currentRadius = brushRadius + (chargeRatio * 40);
+
+      ctxFx.save();
+      ctxFx.shadowBlur = 24 + chargeRatio * 20;
+      ctxFx.shadowColor = chargeRatio > 0.8 ? "#ec4899" : "#9333ea";
+      ctxFx.strokeStyle = chargeRatio > 0.8 
+        ? "rgba(236, 72, 153, " + (0.7 + Math.sin(frameCount * 0.3) * 0.3) + ")"
+        : "rgba(168, 85, 247, " + (0.4 + Math.sin(frameCount * 0.2) * 0.3) + ")";
+      ctxFx.lineWidth = 3 + chargeRatio * 3;
+      ctxFx.beginPath();
+      ctxFx.arc(lastX, lastY, currentRadius, 0, Math.PI * 2);
+      ctxFx.stroke();
+
+      ctxFx.fillStyle = "#000000";
+      ctxFx.beginPath();
+      ctxFx.arc(lastX, lastY, Math.max(6, currentRadius * 0.45), 0, Math.PI * 2);
+      ctxFx.fill();
+
+      if (chargeRatio > 0.1) {
+        ctxFx.strokeStyle = "#38bdf8";
+        ctxFx.lineWidth = 4;
+        ctxFx.beginPath();
+        ctxFx.arc(lastX, lastY, currentRadius + 8, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * chargeRatio));
+        ctxFx.stroke();
+      }
+
+      ctxFx.restore();
+
+      if (frameCount % 7 === 0) {
+        const dronePitch = 60 + chargeRatio * 80 + Math.sin(frameCount * 0.1) * 15;
+        playCosmicDrone(dronePitch, 0.03 + chargeRatio * 0.06, 0.14);
+      }
+    }
+  }
+
+  // Draw Lightning Bolts
+  for (let i = lightningBolts.length - 1; i >= 0; i--) {
+    const bolt = lightningBolts[i];
+    ctxFx.save();
+    ctxFx.strokeStyle = "#38bdf8";
+    ctxFx.shadowColor = "#0ea5e9";
+    ctxFx.shadowBlur = 14;
+    ctxFx.lineWidth = Math.max(1, (bolt.life / bolt.maxLife) * 3);
+    ctxFx.beginPath();
+    ctxFx.moveTo(bolt.x1, bolt.y1);
+    
+    const midX = (bolt.x1 + bolt.x2) / 2 + (Math.random() - 0.5) * 20;
+    const midY = (bolt.y1 + bolt.y2) / 2 + (Math.random() - 0.5) * 20;
+    ctxFx.lineTo(midX, midY);
+    ctxFx.lineTo(bolt.x2, bolt.y2);
+    ctxFx.stroke();
+    ctxFx.restore();
+
+    bolt.life--;
+    if (bolt.life <= 0) lightningBolts.splice(i, 1);
+  }
+
+  // Particle Updates
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.update(lastX, lastY);
+    p.draw(ctxFx);
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // Autonomous Roaming Black Holes
+  for (let i = roamingHoles.length - 1; i >= 0; i--) {
+    const hole = roamingHoles[i];
+    const prevHoleX = hole.x;
+    const prevHoleY = hole.y;
+
+    hole.x += hole.vx;
+    hole.y += hole.vy;
+
+    if (hole.x < 50 || hole.x > width - 50) hole.vx *= -1;
+    if (hole.y < 50 || hole.y > height - 50) hole.vy *= -1;
+
+    scratchSegment(prevHoleX, prevHoleY, hole.x, hole.y, hole.radius);
+
+    ctxFx.save();
+    ctxFx.shadowBlur = 24;
+    ctxFx.shadowColor = "#06b6d4";
+    ctxFx.strokeStyle = "rgba(6, 182, 212, 0.8)";
+    ctxFx.lineWidth = 2.5;
+    ctxFx.beginPath();
+    ctxFx.arc(hole.x, hole.y, hole.radius * 1.3, 0, Math.PI * 2);
+    ctxFx.stroke();
+
+    ctxFx.fillStyle = "#000000";
+    ctxFx.beginPath();
+    ctxFx.arc(hole.x, hole.y, hole.radius * 0.6, 0, Math.PI * 2);
+    ctxFx.fill();
+    ctxFx.restore();
+
+    hole.life--;
+    if (hole.life <= 0) roamingHoles.splice(i, 1);
+  }
+}
+
+// Pointer Events
+function getCanvasCoords(e) {
+  const rect = viewport.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+}
+
+viewport.addEventListener("pointerdown", (e) => {
+  initAudio();
+  isPointerDown = true;
+  pointerId = e.pointerId;
+  try {
+    viewport.setPointerCapture(e.pointerId);
+  } catch (err) {}
+
+  const pos = getCanvasCoords(e);
+  lastX = pos.x;
+  lastY = pos.y;
+  prevX = pos.x;
+  prevY = pos.y;
+  anchorX = pos.x;
+  anchorY = pos.y;
+  stillFrames = 0;
+
+  performToolScratch(lastX, lastY, lastX, lastY);
+});
+
+viewport.addEventListener("pointermove", (e) => {
+  if (!isPointerDown) return;
+  const pos = getCanvasCoords(e);
+
+  const midX = (lastX + pos.x) / 2;
+  const midY = (lastY + pos.y) / 2;
+
+  performToolScratch(lastX, lastY, midX, midY);
+  performToolScratch(midX, midY, pos.x, pos.y);
+
+  lastX = pos.x;
+  lastY = pos.y;
+});
+
+function endPointerGesture() {
+  if (isPointerDown) {
+    if (currentTool === "vortex" && stillFrames >= 45) {
+      triggerSupernova(lastX, lastY, brushRadius * 2.2 + (stillFrames * 1.5));
+    }
+    saveState();
+  }
+  isPointerDown = false;
+  pointerId = null;
+  stillFrames = 0;
+}
+
+viewport.addEventListener("pointerup", endPointerGesture);
+viewport.addEventListener("pointercancel", endPointerGesture);
+
+// UI Listeners
+document.querySelectorAll(".tool-pill").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tool-pill").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentTool = btn.dataset.tool;
+    showToast("Selected: " + btn.textContent.trim());
+  });
+});
+
+document.querySelectorAll(".size-pill").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".size-pill").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    brushRadius = parseInt(btn.dataset.size);
+    document.getElementById("slBrushSize").value = brushRadius;
+    document.getElementById("valBrushSize").textContent = brushRadius + "px";
+    showToast("Brush Size: " + brushRadius + "px");
+  });
+});
+
+// God Mode Controls
+const godBtn = document.getElementById("godBtn");
+const godPanel = document.getElementById("godPanel");
+const godClose = document.getElementById("godClose");
+
+function toggleGodPanel() {
+  godPanel.classList.toggle("open");
+  godBtn.classList.toggle("active");
+}
+
+godBtn.addEventListener("click", toggleGodPanel);
+godClose.addEventListener("click", toggleGodPanel);
+
+document.getElementById("slGravity").addEventListener("input", (e) => {
+  god.gravity = parseFloat(e.target.value);
+  document.getElementById("valGravity").textContent = god.gravity.toFixed(1) + "x";
+});
+
+document.getElementById("slSwirl").addEventListener("input", (e) => {
+  god.swirl = parseFloat(e.target.value);
+  document.getElementById("valSwirl").textContent = god.swirl.toFixed(1) + "x";
+});
+
+document.getElementById("slParticles").addEventListener("input", (e) => {
+  god.particlesMax = parseInt(e.target.value);
+  document.getElementById("valParticles").textContent = god.particlesMax;
+});
+
+document.getElementById("slBrushSize").addEventListener("input", (e) => {
+  brushRadius = parseInt(e.target.value);
+  document.getElementById("valBrushSize").textContent = brushRadius + "px";
+  document.querySelectorAll(".size-pill").forEach(b => b.classList.remove("active"));
+});
+
+document.getElementById("selTheme").addEventListener("change", (e) => {
+  god.theme = e.target.value;
+  drawRainbowBackground();
+  showToast("Theme: " + e.target.options[e.target.selectedIndex].text);
+});
+
+document.getElementById("actRoam").addEventListener("click", () => {
+  roamingHoles.push({
+    x: width / 2,
+    y: height / 2,
+    vx: (Math.random() - 0.5) * 7,
+    vy: (Math.random() - 0.5) * 7,
+    radius: Math.max(30, brushRadius),
+    life: 300
+  });
+  showToast("🚀 Roaming Black Hole Spawned!");
+});
+
+document.getElementById("actNova").addEventListener("click", () => {
+  triggerSupernova(width / 2, height / 2, Math.max(220, brushRadius * 4));
+  saveState();
+});
+
+document.getElementById("actShower").addEventListener("click", () => {
+  triggerMeteorShower();
+});
+
+document.getElementById("actInvert").addEventListener("click", () => {
+  god.isInverted = !god.isInverted;
+  const lbl = document.getElementById("lblInvert");
+  if (god.isInverted) {
+    lbl.textContent = "Paint Dark";
+    showToast("☯ Inverted: Scratching now deposits dark matter!");
+  } else {
+    lbl.textContent = "Carve Light";
+    showToast("☯ Normal: Scratching carves into rainbow light!");
+  }
+});
+
+document.getElementById("actImplode").addEventListener("click", () => {
+  showToast("🕳️ Void Reset Implosion!");
+  triggerSupernova(width / 2, height / 2, 70);
+  setTimeout(() => {
+    initMatteScratchLayer();
+  }, 250);
+});
+
+// Top Actions
+document.getElementById("undoBtn").addEventListener("click", undo);
+document.getElementById("redoBtn").addEventListener("click", redo);
+document.getElementById("clearBtn").addEventListener("click", () => {
+  initMatteScratchLayer();
+  showToast("✨ Canvas Reset");
+});
+
+document.getElementById("soundBtn").addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  if (soundEnabled) initAudio();
+  document.getElementById("soundBtn").textContent = soundEnabled ? "🔊 Audio: ON" : "🔇 Audio: OFF";
+  showToast(soundEnabled ? "Audio Enabled" : "Audio Muted");
+});
+
+document.getElementById("saveBtn").addEventListener("click", () => {
+  const tempCanvas = document.createElement("canvas");
+  tempCanvas.width = scratchCanvas.width;
+  tempCanvas.height = scratchCanvas.height;
+  const tCtx = tempCanvas.getContext("2d");
+
+  tCtx.drawImage(rainbowCanvas, 0, 0);
+  tCtx.drawImage(scratchCanvas, 0, 0);
+  tCtx.drawImage(fxCanvas, 0, 0);
+
+  const link = document.createElement("a");
+  link.download = "blackhole_rainbow_scratch_" + Date.now() + ".png";
+  link.href = tempCanvas.toDataURL("image/png");
+  link.click();
+  showToast("💾 Saved High-Res PNG!");
+});
+
+// Keyboard Shortcuts
+window.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+
+  if (e.key === "g" || e.key === "G") toggleGodPanel();
+  if (e.key === "b" || e.key === "B") document.getElementById("actRoam").click();
+  if (e.key === "h" || e.key === "H") document.getElementById("actNova").click();
+  if (e.key === "m" || e.key === "M") document.getElementById("actShower").click();
+  if (e.key === "c" || e.key === "C") document.getElementById("clearBtn").click();
+
+  if (e.ctrlKey && (e.key === "z" || e.key === "Z")) {
+    if (e.shiftKey) redo();
+    else undo();
+    e.preventDefault();
+  } else if (e.ctrlKey && (e.key === "y" || e.key === "Y")) {
+    redo();
+    e.preventDefault();
+  }
+
+  if (e.key === "1") document.querySelector('[data-tool="vortex"]').click();
+  if (e.key === "2") document.querySelector('[data-tool="wand"]').click();
+  if (e.key === "3") document.querySelector('[data-tool="unicorn"]').click();
+  if (e.key === "4") document.querySelector('[data-tool="pen"]').click();
+  if (e.key === "5") document.querySelector('[data-tool="hammer"]').click();
+});
+
+// Window Lifecycle Bindings
+window.addEventListener("resize", resize);
+window.addEventListener("DOMContentLoaded", () => {
+  resize();
+  animate();
+});
+if (document.readyState === "complete" || document.readyState === "interactive") {
+  resize();
+  animate();
+}
+</script>
+</body>
+</html>
