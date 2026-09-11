@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic Rainbow Scratch Art Notebook</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background: #090a0d;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      color: #e2e8f0;
+      position: relative;
+      transition: background 0.8s ease;
+    }
+
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    header {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(18, 20, 26, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      max-width: 95vw;
+      overflow-x: auto;
+    }
+
+    .brand-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ff007f, #ffaa00, #00ffcc, #aa00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 6px;
+    }
+
+    .divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+    }
+
+    .tool-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    .tool-badge {
+      font-weight: 600;
+      color: #f8fafc;
+      padding: 3px 9px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .tool-badge.dev-badge {
+      background: linear-gradient(135deg, #f59e0b, #ec4899);
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.6);
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      border: none;
+      color: white;
+      box-shadow: 0 0 14px rgba(236, 72, 153, 0.4);
+    }
+
+    .size-picker {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+
+    .size-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .size-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .size-btn.active {
+      background: #8b5cf6;
+      color: #fff;
+    }
+
+    .notebook-wrapper {
+      position: relative;
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95));
+      cursor: none;
+      z-index: 10;
+    }
+
+    .top-spiral-spine {
+      width: min(88vw, 440px);
+      height: 40px;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-end;
+      padding: 0 14px 3px 14px;
+      z-index: 10;
+    }
+
+    .double-ring {
+      position: relative;
+      width: 14px;
+      height: 36px;
+      cursor: pointer;
+    }
+
+    .wire-coil {
+      position: absolute;
+      width: 6px;
+      height: 32px;
+      background: linear-gradient(90deg, #52525b 0%, #d4d4d8 45%, #27272a 100%);
+      border-radius: 4px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    }
+
+    .wire-coil.left { left: 0; }
+    .wire-coil.right { right: 0; }
+
+    .notebook-page {
+      position: relative;
+      width: min(88vw, 440px);
+      height: min(73vh, 620px);
+      background: #0d0e10;
+      border-radius: 8px 8px 14px 14px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 2px 4px rgba(255, 255, 255, 0.05),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .punch-holes-row {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 0 14px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .punch-hole {
+      width: 14px;
+      height: 14px;
+      background: #050506;
+      border-radius: 50%;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.95), 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #rainbowCanvas { z-index: 1; }
+    #scratchCanvas { z-index: 2; }
+    #fxCanvas { z-index: 3; pointer-events: none; }
+
+    #custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 72px;
+      height: 72px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-10px, -10px);
+      transition: transform 0.04s ease-out;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.75));
+      display: none;
+    }
+
+    #custom-cursor.active-press {
+      transform: translate(-10px, -10px) scale(0.92) rotate(-10deg);
+    }
+
+    .footer-bar {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .footer-bar kbd {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 7, 10, 0.9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .modal-backdrop.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal-dialog {
+      background: #13151a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 28px 30px;
+      width: min(94vw, 860px);
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.95);
+      text-align: center;
+      animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-dialog h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .modal-dialog p {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 600px;
+      margin: 0 auto 18px auto;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .tool-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 14px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .tool-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .tool-card.selected {
+      border-color: #ec4899;
+      background: rgba(236, 72, 153, 0.14);
+      box-shadow: 0 0 24px rgba(236, 72, 153, 0.35);
+    }
+
+    .tool-card.god-mode-card {
+      display: none;
+      border: 1.5px solid #f59e0b;
+      background: radial-gradient(circle at center, rgba(245, 158, 11, 0.2) 0%, rgba(20, 10, 30, 0.6) 100%);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+      animation: godCardPulse 2s infinite alternate;
+    }
+    @keyframes godCardPulse {
+      0% { border-color: #f59e0b; box-shadow: 0 0 16px rgba(245, 158, 11, 0.3); }
+      100% { border-color: #00ffcc; box-shadow: 0 0 28px rgba(0, 255, 204, 0.6); }
+    }
+    .tool-card.god-mode-card.revealed {
+      display: flex !important;
+    }
+
+    .dev-tag {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, #f59e0b, #ec4899);
+      color: #000;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .tool-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      transition: transform 0.25s ease;
+      font-size: 24px;
+    }
+
+    .tool-card:hover .tool-icon-wrapper {
+      transform: scale(1.1);
+    }
+
+    .tool-card h3 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+
+    .tool-card span {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+
+    #passcodeModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 8, 0.94);
+      backdrop-filter: blur(22px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    #passcodeModal.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .passcode-box {
+      background: #0d0f14;
+      border: 1.5px solid #f59e0b;
+      box-shadow: 0 0 35px rgba(245, 158, 11, 0.4), 0 25px 60px rgba(0, 0, 0, 0.95);
+      border-radius: 20px;
+      padding: 28px;
+      width: min(92vw, 400px);
+      text-align: center;
+      animation: modalPop 0.3s ease;
+    }
+    .passcode-box h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fbbf24;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .passcode-box p {
+      font-size: 12.5px;
+      color: #94a3b8;
+      margin-bottom: 18px;
+    }
+    .passcode-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      color: #00ffcc;
+      text-align: center;
+      letter-spacing: 3px;
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .passcode-input:focus {
+      border-color: #f59e0b;
+    }
+
+    #devToast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: linear-gradient(135deg, #181926, #0c0d14);
+      border: 1.5px solid #f59e0b;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.6), 0 10px 40px rgba(0, 0, 0, 0.9);
+      color: #f8fafc;
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 99999;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #devToast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    #devHud {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 60;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(18, 20, 26, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid #f59e0b;
+      padding: 12px 14px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(245, 158, 11, 0.3);
+      max-width: 280px;
+    }
+    #devHud.active {
+      display: flex;
+    }
+    .hud-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .hud-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .hud-btn:hover {
+      background: #f59e0b;
+      color: #000;
+      border-color: #f59e0b;
+    }
+
+    #customToolModal, #ghostModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 8, 0.92);
+      backdrop-filter: blur(20px);
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    #customToolModal.active, #ghostModal.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .dev-modal-box {
+      background: #12141a;
+      border: 1.5px solid #f59e0b;
+      box-shadow: 0 0 35px rgba(245, 158, 11, 0.4), 0 25px 60px rgba(0, 0, 0, 0.95);
+      border-radius: 22px;
+      padding: 26px 30px;
+      width: min(92vw, 480px);
+      text-align: center;
+      animation: modalPop 0.3s ease;
+      color: #e2e8f0;
+    }
+    .dev-modal-box h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+    .dev-modal-box p {
+      font-size: 12.5px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #cbd5e1;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #f8fafc;
+      font-size: 13px;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: #f59e0b;
+    }
+    .emoji-chips {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .emoji-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s;
+    }
+    .emoji-chip:hover {
+      background: #f59e0b;
+      transform: scale(1.15);
+    }
+    .ghost-preset-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+    .ghost-preset-btn:hover {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
+      transform: translateX(3px);
+    }
+    #ghostStatus {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+      color: #e0f2fe;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 99999;
+    }
+    #ghostStatus.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bgCanvas"></canvas>
+
+  <header>
+    <div class="brand-title" id="brandTitle" title="Developer shortcut: 5 clicks">
+      Rainbow Scratchbook
+    </div>
+    <div class="divider"></div>
+    <div class="tool-indicator">
+      Instrument:
+      <span class="tool-badge" id="currentToolDisplay">Unicorn Horn</span>
+    </div>
+    <button class="btn" id="openModalBtn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Change Tool
+    </button>
+    <div class="divider"></div>
+
+    <div class="size-picker" title="Stylus Width">
+      <button class="size-btn active" data-size="4">S</button>
+      <button class="size-btn" data-size="8">M</button>
+      <button class="size-btn" data-size="16">L</button>
+    </div>
+
+    <button class="btn" id="undoBtn" title="Undo Last Scratch">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+      Undo
+    </button>
+
+    <button class="btn" id="soundToggleBtn" title="Toggle Sound">
+      <span id="soundIcon">🔊</span>
+    </button>
+
+    <button class="btn" id="headerGhostBtn" title="Launch Ghost Pen Auto-Drawing">
+      <span>👻</span> Ghost Draw
+    </button>
+    <button class="btn" id="headerCustomToolBtn" title="Create your own custom instrument">
+      <span>🛠️</span> Create Tool
+    </button>
+    <button class="btn" id="clearBtn" title="Reset to Solid Black Sheet">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      Reset Page
+    </button>
+
+    <button class="btn btn-primary" id="saveBtn" title="Download Artwork">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Save Artwork
+    </button>
+  </header>
+
+  <div class="notebook-wrapper" id="notebookWrapper">
+    <div class="top-spiral-spine" id="spiralSpine"></div>
+    <div class="notebook-page" id="notebookPage">
+      <div class="punch-holes-row" id="punchHolesRow"></div>
+      <canvas id="rainbowCanvas"></canvas>
+      <canvas id="scratchCanvas"></canvas>
+      <canvas id="fxCanvas"></canvas>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>✨ Scratch the black surface to reveal glowing rainbow colors.</span>
+    <span>•</span>
+    <span><kbd>1-8</kbd> Tools</span>
+    <span>•</span>
+    <span><kbd>Ctrl+Z</kbd> Undo</span>
+    <span>•</span>
+    <span><kbd>C</kbd> Clear</span>
+  </div>
+
+  <div id="custom-cursor"></div>
+
+  <div id="ghostStatus">
+    <span>👻 Ghost is drawing...</span>
+    <button class="btn" id="stopGhostBtn" style="padding: 2px 8px; font-size: 11px;">Stop</button>
+  </div>
+
+  <div id="devToast">
+    <span>⚡ DEVELOPER GOD MODE UNLOCKED ⚡</span>
+  </div>
+
+  <div id="passcodeModal">
+    <div class="passcode-box">
+      <h3>⚡ DEVELOPER SECURITY GATEWAY</h3>
+      <p>Enter secret access key to unlock God Mode:</p>
+      <input type="password" class="passcode-input" id="passcodeInput" placeholder="PASSCODE" autofocus>
+      <div class="passcode-btn-row">
+        <button class="btn btn-primary" id="submitPasscodeBtn">AUTHENTICATE</button>
+        <button class="btn" id="cancelPasscodeBtn">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="devHud">
+    <div class="hud-title">
+      <span>⚡ GOD MODE HUD [DEV]</span>
+      <span style="font-size:10px; cursor:pointer; opacity:0.7;" id="relockBtn" title="Relock God Mode">🔒 Relock</span>
+    </div>
+    <div class="hud-btn-group">
+      <button class="hud-btn" id="openCustomToolBtn" title="Build any custom instrument">🛠️ Custom Tool</button>
+      <button class="hud-btn" id="openGhostModalBtn" title="Automated ghost drawing prank">👻 Ghost Draw</button>
+      <button class="hud-btn" id="godAutoFillBtn" title="Reveal full rainbow canvas">Auto-Reveal</button>
+      <button class="hud-btn" id="godLaserBtn" title="1px Micro Precision">1px Laser</button>
+      <button class="hud-btn" id="godMegaBtn" title="50px Mega Nuke">50px Nuke</button>
+      <button class="hud-btn" id="godEquipBtn" title="Equip Infinity Saber">Equip Saber</button>
+      <button class="hud-btn" id="godSpectrumBtn" title="Cycle Rainbow Spectrum Palette">Hue Shift</button>
+    </div>
+  </div>
+
+  <div id="customToolModal">
+    <div class="dev-modal-box">
+      <h3>🛠️ CUSTOM INSTRUMENT CREATOR</h3>
+      <p>Build your own cursor instrument with custom particles & sound!</p>
+      
+      <div class="form-group">
+        <label>Instrument Name</label>
+        <input type="text" class="form-input" id="customNameInput" placeholder="e.g. Golden Lion Saber" value="Golden Lion">
+      </div>
+
+      <div class="form-group">
+        <label>Instrument Icon / Emoji</label>
+        <input type="text" class="form-input" id="customIconInput" placeholder="Enter emoji or symbol" value="🦁">
+        <div class="emoji-chips">
+          <span class="emoji-chip" data-emoji="🦁">🦁</span>
+          <span class="emoji-chip" data-emoji="👑">👑</span>
+          <span class="emoji-chip" data-emoji="🎸">🎸</span>
+          <span class="emoji-chip" data-emoji="🏎️">🏎️</span>
+          <span class="emoji-chip" data-emoji="🚀">🚀</span>
+          <span class="emoji-chip" data-emoji="💎">💎</span>
+          <span class="emoji-chip" data-emoji="⚡">⚡</span>
+          <span class="emoji-chip" data-emoji="🍕">🍕</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Particle Scratch Effect</label>
+        <select class="form-select" id="customParticleSelect">
+          <option value="fire">🔥 Fire Embers & Smoke</option>
+          <option value="stars">✨ Cosmic Starlight Sparkles</option>
+          <option value="lightning">⚡ Electric Lightning Arcs</option>
+          <option value="matrix">🟢 Matrix Digital Code</option>
+          <option value="ink">✒️ Liquid Calligraphy Splatters</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Audio Sound</label>
+        <select class="form-select" id="customSoundSelect">
+          <option value="laser">Sci-Fi Power Saber</option>
+          <option value="dragon">Dragon Flame Roar</option>
+          <option value="bell">Magic Ethereal Bell</option>
+          <option value="scratch">Paper Whisper Scratch</option>
+          <option value="thunder">Thor Thunder Rumble</option>
+          <option value="whistle">Thalapathy Whistle</option>
+          <option value="squeak">Plush Toy Squeak</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 18px;">
+        <button class="btn btn-primary" id="forgeCustomToolBtn" style="padding: 10px 24px;">FORGE & EQUIP</button>
+        <button class="btn" id="closeCustomToolBtn">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ghostModal">
+    <div class="dev-modal-box">
+      <h3>👻 GHOST PEN AUTOMATION</h3>
+      <p>Watch the notebook draw on its own with real particles & sounds!</p>
+
+      <div class="form-group">
+        <label>Choose Ghost Artwork</label>
+        <button class="ghost-preset-btn" data-preset="dreamcatcher">
+          <span>🕸️ Sacred Dreamcatcher (Photo Style)</span>
+          <span style="opacity: 0.6;">→</span>
+        </button>
+        <button class="ghost-preset-btn" data-preset="dreamtext">
+          <span>✍️ "Dream your, Dream" Script</span>
+          <span style="opacity: 0.6;">→</span>
+        </button>
+        <button class="ghost-preset-btn" data-preset="galaxy">
+          <span>✨ Cosmic Starry Galaxy & Moon</span>
+          <span style="opacity: 0.6;">→</span>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label>Or Enter Custom Word / Name to Write</label>
+        <input type="text" class="form-input" id="ghostCustomTextInput" placeholder="e.g. Kishore, Magic, Hello">
+      </div>
+
+      <div class="form-group">
+        <label>Prank Delay Timer</label>
+        <select class="form-select" id="ghostDelaySelect">
+          <option value="0">Start Immediately</option>
+          <option value="3">3-Second Countdown (Hand to Friend)</option>
+          <option value="5">5-Second Countdown</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
+        <button class="btn btn-primary" id="startCustomGhostBtn" style="padding: 10px 24px;">LAUNCH GHOST DRAW</button>
+        <button class="btn" id="closeGhostModalBtn">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="toolModal">
+    <div class="modal-dialog">
+      <h2>What do you want to draw with?</h2>
+      <p>Choose your instrument! Each tool changes your cursor and creates animated themes in the room.</p>
+      
+      <div class="tools-grid" id="toolsGrid">
+        <div class="tool-card" data-tool="wand">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="m19 5-7 7-4-4 7-7 4 4ZM2 22l5-5M14 2l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z"/></svg>
+          </div>
+          <h3>Harry Potter Wand</h3>
+          <span>Floating Hogwarts candles & Golden Snitch in background.</span>
+        </div>
+
+        <div class="tool-card selected" data-tool="unicorn">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><path d="M12 2L6 22h12L12 2Z"/><path d="M8 17l8-2M9 13l6-2M10 9l4-2"/></svg>
+          </div>
+          <h3>Unicorn Horn</h3>
+          <span>Animated winged unicorn flying across the sky with rainbow stardust.</span>
+        </div>
+
+        <div class="tool-card" data-tool="pen">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2"><path d="m18 2 4 4-12 12-6 2 2-6L18 2ZM11 7l4 4M14.5 5.5l-8 8"/></svg>
+          </div>
+          <h3>Antique Fountain Pen</h3>
+          <span>Floating vintage calligraphy letters, feathers & glowing manuscripts.</span>
+        </div>
+
+        <div class="tool-card" data-tool="hammer">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="3" y="4" width="18" height="9" rx="2"/><path d="M12 13v9M10 22h4M7 8l2-2M15 6l2 2"/></svg>
+          </div>
+          <h3>Thor's Hammer</h3>
+          <span>Thunderstorm sky with distant lightning flashes & glowing Norse runes.</span>
+        </div>
+
+        <div class="tool-card" data-tool="dragon">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          </div>
+          <h3>Fire Dragon</h3>
+          <span>Giant flying dragon breathing fire across the dark sky.</span>
+        </div>
+
+        <div class="tool-card" data-tool="wednesday">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M7 11 C 5 13, 5 18, 4 20"/><path d="M17 11 C 19 13, 19 18, 20 20"/></svg>
+          </div>
+          <h3>Wednesday Addams</h3>
+          <span>Gothic moon with flapping bats, ravens, and eerie violet mist.</span>
+        </div>
+
+        <div class="tool-card" data-tool="mummy">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="6"/><path d="M4 10h16M4 14h16M8 8v8M16 8v8"/><circle cx="9" cy="12" r="1" fill="#fbbf24"/><circle cx="15" cy="12" r="1" fill="#fbbf24"/></svg>
+          </div>
+          <h3>Mummy Slippers</h3>
+          <span>Cute walking mummy slippers, desert dunes, & floating golden hieroglyphs.</span>
+        </div>
+
+        <div class="tool-card" data-tool="vijay">
+          <div class="tool-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M2 10s3-3 7-3 5 3 5 3 1-3 5-3 3 3 3 3-2 5-6 5-4-2-4-2-1 2-4 2-6-5-6-5Z"/><path d="M12 11v3"/><circle cx="12" cy="18" r="3"/></svg>
+          </div>
+          <h3>Actor Vijay</h3>
+          <span>Concert stadium spotlights, celebratory confetti & firework sparklers.</span>
+        </div>
+
+        <div class="tool-card god-mode-card" id="godModeCard" data-tool="god">
+          <div class="dev-tag">GOD MODE</div>
+          <div class="tool-icon-wrapper">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m13 2-2 2.5h3L11 8l5 1-8 13 2-8H7l4-12Z"/></svg>
+          </div>
+          <h3>Infinity Saber</h3>
+          <span>Developer God Mode blade: Matrix digital rain, cosmic stars, & laser arcs.</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="startDrawingBtn" style="padding: 11px 34px; font-size: 14.5px; margin: 0 auto;">
+        Enter Matte Black Scratchbook
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const cursorSVGs = {
+      wand: `
+        <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="6" r="5" fill="#fef08a" filter="drop-shadow(0 0 6px #facc15)" />
+          <path d="M6 6 L70 70" stroke="#5c2c16" stroke-width="6" stroke-linecap="round"/>
+          <path d="M6 6 L70 70" stroke="#854d0e" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="4" fill="#3f1a08" stroke="#ca8a04" stroke-width="1.5"/>
+          <circle cx="32" cy="32" r="4.5" fill="#3f1a08" stroke="#ca8a04" stroke-width="1.5"/>
+          <circle cx="46" cy="46" r="5" fill="#3f1a08" stroke="#ca8a04" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="5.5" fill="#291205" stroke="#ca8a04" stroke-width="1.5"/>
+          <path d="M6 0 L8 4 L12 6 L8 8 L6 12 L4 8 L0 6 L4 4 Z" fill="#ffffff"/>
+        </svg>
+      `,
+      unicorn: `
+        <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hornGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="30%" stop-color="#fbcfe8" />
+              <stop offset="60%" stop-color="#c4b5fd" />
+              <stop offset="100%" stop-color="#bae6fd" />
+            </linearGradient>
+          </defs>
+          <path d="M6 6 L62 46 L46 64 Z" fill="url(#hornGrad)" stroke="#f472b6" stroke-width="1.5"/>
+          <path d="M16 14 C 20 20, 26 24, 34 26" stroke="#ec4899" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M26 24 C 31 31, 38 35, 46 38" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="6" cy="6" r="3" fill="#ffffff" filter="drop-shadow(0 0 6px #f472b6)"/>
+        </svg>
+      `,
+      pen: `
+        <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="goldNib" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a" />
+              <stop offset="40%" stop-color="#eab308" />
+              <stop offset="100%" stop-color="#713f12" />
+            </linearGradient>
+          </defs>
+          <path d="M6 6 L28 12 L36 36 L12 28 Z" fill="url(#goldNib)" stroke="#a16207" stroke-width="1.5"/>
+          <path d="M6 6 L20 20" stroke="#1c1917" stroke-width="1.5"/>
+          <circle cx="20" cy="20" r="2" fill="#1c1917"/>
+          <path d="M22 22 L72 72 L60 84 L12 28 Z" fill="#1e1b4b" stroke="#ca8a04" stroke-width="1.5"/>
+          <path d="M24 34 L34 24" stroke="#fde047" stroke-width="3"/>
+        </svg>
+      `,
+      hammer: `
+        <svg width="68" height="68" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#94a3b8" />
+              <stop offset="50%" stop-color="#475569" />
+              <stop offset="100%" stop-color="#1e293b" />
+            </linearGradient>
+          </defs>
+          <rect x="8" y="8" width="44" height="26" rx="3" fill="url(#metalGrad)" stroke="#cbd5e1" stroke-width="2"/>
+          <rect x="14" y="12" width="32" height="18" rx="2" fill="none" stroke="#38bdf8" stroke-dasharray="3,3" stroke-width="1.5"/>
+          <path d="M30 34 L64 68" stroke="#78350f" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="8" cy="8" r="3" fill="#38bdf8" filter="drop-shadow(0 0 8px #38bdf8)"/>
+          <path d="M8 8 L3 2 L10 5" stroke="#67e8f9" stroke-width="1.5"/>
+        </svg>
+      `,
+      dragon: `
+        <svg width="68" height="68" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="fireTip" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a"/>
+              <stop offset="50%" stop-color="#f97316"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+            <linearGradient id="dragonSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#991b1b"/>
+              <stop offset="100%" stop-color="#450a0a"/>
+            </linearGradient>
+          </defs>
+          <path d="M6 6 C 2 12, 12 16, 8 24 C 18 20, 20 10, 6 6 Z" fill="url(#fireTip)" filter="drop-shadow(0 0 8px #f97316)"/>
+          <path d="M12 16 L38 28 L54 22 L72 38 L60 52 L36 46 L22 32 Z" fill="url(#dragonSkin)" stroke="#fca5a5" stroke-width="1.5"/>
+          <path d="M54 22 L76 12 L64 28" fill="#7f1d1d" stroke="#fecaca" stroke-width="1.5"/>
+          <path d="M60 26 L82 22 L68 34" fill="#7f1d1d" stroke="#fecaca" stroke-width="1.5"/>
+          <circle cx="36" cy="30" r="3.5" fill="#facc15" stroke="#dc2626" stroke-width="1"/>
+          <circle cx="16" cy="20" r="1.5" fill="#450a0a"/>
+        </svg>
+      `,
+      wednesday: `
+        <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="6" r="3.5" fill="#c084fc" filter="drop-shadow(0 0 6px #9333ea)"/>
+          <circle cx="36" cy="36" r="18" fill="#18181b" stroke="#71717a" stroke-width="1.5"/>
+          <path d="M18 36 C 24 22, 34 22, 36 28 C 38 22, 48 22, 54 36 Z" fill="#09090b"/>
+          <path d="M20 42 C 14 52, 16 68, 12 80" stroke="#09090b" stroke-width="6" stroke-linecap="round"/>
+          <path d="M52 42 C 58 52, 56 68, 60 80" stroke="#09090b" stroke-width="6" stroke-linecap="round"/>
+          <path d="M26 54 L36 64 L46 54 L36 50 Z" fill="#ffffff" stroke="#e4e4e7" stroke-width="1"/>
+          <path d="M34 56 L38 56 L37 66 L35 66 Z" fill="#09090b"/>
+        </svg>
+      `,
+      mummy: `
+        <svg width="68" height="68" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="6" r="3" fill="#fef08a" filter="drop-shadow(0 0 6px #eab308)"/>
+          <path d="M6 6 C 28 -4, 62 12, 70 38 C 76 60, 56 78, 30 74 C 10 70, -4 40, 6 6 Z" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+          <path d="M4 22 C 22 18, 48 24, 66 32" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+          <path d="M10 40 C 30 36, 52 44, 68 54" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+          <path d="M16 58 C 32 54, 46 62, 60 68" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="30" cy="28" r="6" fill="#ffffff" stroke="#78350f" stroke-width="1"/>
+          <circle cx="31" cy="28" r="3" fill="#0f172a"/>
+          <circle cx="44" cy="32" r="6" fill="#ffffff" stroke="#78350f" stroke-width="1"/>
+          <circle cx="45" cy="32" r="3" fill="#0f172a"/>
+          <path d="M66 58 C 74 68, 70 82, 82 88" stroke="#fde047" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      `,
+      vijay: `
+        <svg width="68" height="68" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="6" r="4.5" fill="#fbbf24" stroke="#d97706" stroke-width="1.5" filter="drop-shadow(0 0 8px #f59e0b)"/>
+          <path d="M6 3 L6 9 M3 6 L9 6" stroke="#b45309" stroke-width="1"/>
+          <path d="M22 28 C 30 14, 52 14, 64 26 C 68 32, 70 42, 68 48 C 58 44, 42 42, 22 52 Z" fill="#18181b"/>
+          <path d="M24 38 C 24 32, 40 32, 42 38 C 42 46, 26 46, 24 38 Z" fill="#09090b" stroke="#f59e0b" stroke-width="2"/>
+          <path d="M46 38 C 46 32, 62 32, 64 38 C 64 46, 48 46, 46 38 Z" fill="#09090b" stroke="#f59e0b" stroke-width="2"/>
+          <path d="M42 37 L46 37" stroke="#f59e0b" stroke-width="2.5"/>
+          <path d="M28 35 L34 43" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+          <path d="M50 35 L56 43" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+          <path d="M8 12 C 14 20, 20 24, 26 28" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3"/>
+        </svg>
+      `,
+      god: `
+        <svg width="74" height="74" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="godBlade" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="25%" stop-color="#38bdf8"/>
+              <stop offset="70%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#f59e0b"/>
+            </linearGradient>
+          </defs>
+          <circle cx="6" cy="6" r="6" fill="#ffffff" filter="drop-shadow(0 0 12px #00ffcc)"/>
+          <circle cx="6" cy="6" r="3" fill="#facc15"/>
+          <path d="M6 6 L65 65" stroke="url(#godBlade)" stroke-width="8" stroke-linecap="round" filter="drop-shadow(0 0 10px #38bdf8)"/>
+          <path d="M6 6 L65 65" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="36" cy="36" r="14" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4"/>
+          <circle cx="36" cy="36" r="18" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+          <path d="M6 -2 L6 14 M-2 6 L14 6" stroke="#ffffff" stroke-width="2"/>
+        </svg>
+      `
+    };
+
+    const toolDetails = {
+      wand: { name: "Elder Wand", bgTheme: "Hogwarts Night" },
+      unicorn: { name: "Unicorn Horn", bgTheme: "Flying Unicorn & Rainbows" },
+      pen: { name: "Antique Fountain Pen", bgTheme: "Ancient Library & Scrolls" },
+      hammer: { name: "Thor's Mjölnir", bgTheme: "Thunderstorm & Lightning" },
+      dragon: { name: "Fire Dragon", bgTheme: "Flying Dragon & Fire Sky" },
+      wednesday: { name: "Wednesday Addams", bgTheme: "Gothic Moon & Bats" },
+      mummy: { name: "Mummy Slippers", bgTheme: "Walking Slipper & Pyramids" },
+      vijay: { name: "Actor Vijay (Thalapathy)", bgTheme: "Mass Stadium Concert" },
+      god: { name: "⚡ Infinity Saber [GOD MODE]", bgTheme: "Matrix Cyber Nebula [DEV]" }
+    };
+
+    let currentTool = "unicorn";
+    let brushRadius = 5;
+    let isSoundEnabled = true;
+    let isGodModeUnlocked = false;
+    let spectrumPresetIndex = 0;
+
+    let customToolConfig = {
+      particle: "fire",
+      sound: "laser",
+      icon: "🦁"
+    };
+
+    const spiralSpine = document.getElementById('spiralSpine');
+    const punchHolesRow = document.getElementById('punchHolesRow');
+    const ringCount = 14;
+
+    for (let i = 0; i < ringCount; i++) {
+      const ring = document.createElement('div');
+      ring.className = 'double-ring';
+      ring.innerHTML = `<div class="wire-coil left"></div><div class="wire-coil right"></div>`;
+      
+      if (i === ringCount - 1) {
+        ring.setAttribute('title', 'Secret Gate');
+        ring.addEventListener('click', () => openPasscodeModal());
+      }
+
+      spiralSpine.appendChild(ring);
+      const hole = document.createElement('div');
+      hole.className = 'punch-hole';
+      punchHolesRow.appendChild(hole);
+    }
+
+    const notebookPage = document.getElementById('notebookPage');
+    const rainbowCanvas = document.getElementById('rainbowCanvas');
+    const scratchCanvas = document.getElementById('scratchCanvas');
+    const fxCanvas = document.getElementById('fxCanvas');
+
+    const rainbowCtx = rainbowCanvas.getContext('2d');
+    const scratchCtx = scratchCanvas.getContext('2d');
+    const fxCtx = fxCanvas.getContext('2d');
+
+    let nbWidth = 0;
+    let nbHeight = 0;
+
+    const undoStack = [];
+    const MAX_UNDO = 15;
+
+    function saveUndoState() {
+      if (nbWidth === 0 || nbHeight === 0) return;
+      if (undoStack.length >= MAX_UNDO) undoStack.shift();
+      const snapshot = scratchCtx.getImageData(0, 0, nbWidth, nbHeight);
+      undoStack.push(snapshot);
+    }
+
+    function undo() {
+      if (undoStack.length > 0) {
+        const lastState = undoStack.pop();
+        scratchCtx.putImageData(lastState, 0, 0);
+      }
+    }
+
+    const rainbowPalettes = [
+      ['#ff007f', '#ff4500', '#ffdd00', '#00ff66', '#00d4ff', '#9d00ff', '#ff0099'],
+      ['#00ffcc', '#38bdf8', '#818cf8', '#c084fc', '#f43f5e', '#fb923c', '#facc15'],
+      ['#f59e0b', '#fbbf24', '#fef08a', '#ffffff', '#ef4444', '#dc2626', '#b45309'],
+      ['#a855f7', '#6366f1', '#3b82f6', '#06b6d4', '#ec4899', '#f43f5e', '#a855f7']
+    ];
+
+    function renderRainbowLayer() {
+      rainbowCtx.clearRect(0, 0, nbWidth, nbHeight);
+
+      const grad = rainbowCtx.createLinearGradient(0, 0, nbWidth * 0.7, nbHeight);
+      const palette = rainbowPalettes[spectrumPresetIndex % rainbowPalettes.length];
+      const step = 1.0 / (palette.length - 1);
+
+      palette.forEach((col, idx) => {
+        grad.addColorStop(idx * step, col);
+      });
+
+      rainbowCtx.fillStyle = grad;
+      rainbowCtx.fillRect(0, 0, nbWidth, nbHeight);
+
+      const spots = [
+        { x: nbWidth * 0.5, y: nbHeight * 0.25, r: 180, color: 'rgba(255, 230, 0, 0.4)' },
+        { x: nbWidth * 0.3, y: nbHeight * 0.65, r: 160, color: 'rgba(0, 255, 120, 0.35)' },
+        { x: nbWidth * 0.7, y: nbHeight * 0.75, r: 170, color: 'rgba(255, 0, 150, 0.4)' },
+        { x: nbWidth * 0.5, y: nbHeight * 0.9, r: 160, color: 'rgba(0, 220, 255, 0.4)' }
+      ];
+
+      spots.forEach(s => {
+        const rad = rainbowCtx.createRadialGradient(s.x, s.y, 10, s.x, s.y, s.r);
+        rad.addColorStop(0, s.color);
+        rad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        rainbowCtx.fillStyle = rad;
+        rainbowCtx.fillRect(0, 0, nbWidth, nbHeight);
+      });
+    }
+
+    function resetScratchLayer() {
+      scratchCtx.globalCompositeOperation = 'source-over';
+      scratchCtx.fillStyle = '#0f1013';
+      scratchCtx.fillRect(0, 0, nbWidth, nbHeight);
+
+      const imgData = scratchCtx.getImageData(0, 0, nbWidth, nbHeight);
+      const data = imgData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const grain = (Math.random() - 0.5) * 12;
+        data[i] = Math.min(255, Math.max(0, data[i] + grain));
+        data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + grain));
+        data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + grain));
+        data[i + 3] = 255;
+      }
+      scratchCtx.putImageData(imgData, 0, 0);
+      undoStack.length = 0;
+    }
+
+    function resizeNotebookCanvases() {
+      const rect = notebookPage.getBoundingClientRect();
+      nbWidth = Math.floor(rect.width);
+      nbHeight = Math.floor(rect.height);
+
+      const prevScratch = document.createElement('canvas');
+      prevScratch.width = scratchCanvas.width;
+      prevScratch.height = scratchCanvas.height;
+      if (scratchCanvas.width > 0) {
+        prevScratch.getContext('2d').drawImage(scratchCanvas, 0, 0);
+      }
+
+      [rainbowCanvas, scratchCanvas, fxCanvas].forEach(c => {
+        c.width = nbWidth;
+        c.height = nbHeight;
+      });
+
+      renderRainbowLayer();
+
+      if (prevScratch.width > 0) {
+        scratchCtx.drawImage(prevScratch, 0, 0, nbWidth, nbHeight);
+      } else {
+        resetScratchLayer();
+      }
+    }
+
+    const bgCanvas = document.getElementById('bgCanvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let bgW = window.innerWidth;
+    let bgH = window.innerHeight;
+
+    function resizeBgCanvas() {
+      bgW = window.innerWidth;
+      bgH = window.innerHeight;
+      bgCanvas.width = bgW;
+      bgCanvas.height = bgH;
+    }
+
+    let animTime = 0;
+
+    let unicornX = -120;
+    let unicornY = 160;
+    const bgStars = [];
+    for (let i = 0; i < 45; i++) {
+      bgStars.push({
+        x: Math.random(),
+        y: Math.random(),
+        size: Math.random() * 3 + 1,
+        twinkleSpeed: Math.random() * 0.05 + 0.02,
+        phase: Math.random() * Math.PI * 2,
+        color: ['#fbcfe8', '#c4b5fd', '#bae6fd', '#fef08a'][Math.floor(Math.random() * 4)]
+      });
+    }
+
+    const floatingCandles = [];
+    for (let i = 0; i < 22; i++) {
+      floatingCandles.push({
+        x: Math.random(),
+        baseY: Math.random(),
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.02 + Math.random() * 0.02,
+        flicker: Math.random() * Math.PI
+      });
+    }
+    let snitchX = 100;
+    let snitchY = 200;
+    let snitchVx = 4.2;
+    let snitchVy = 2.5;
+
+    const letters = ['𝒬', '𝒞', '𝒜', '𝒲', 'ℱ', '𝒮', 'ℳ', '𝒫', '𝒟'];
+    const floatingLetters = [];
+    for (let i = 0; i < 18; i++) {
+      floatingLetters.push({
+        char: letters[i % letters.length],
+        x: Math.random(),
+        y: Math.random(),
+        speed: 0.0006 + Math.random() * 0.0008,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+        size: Math.random() * 20 + 22
+      });
+    }
+
+    let stormFlashAlpha = 0;
+    const runes = ['ᚦ', 'ᚱ', 'ᚢ', 'ᛋ', 'ᛗ', 'ᚨ', 'ᛚ'];
+    const floatingRunes = [];
+    for (let i = 0; i < 16; i++) {
+      floatingRunes.push({
+        char: runes[i % runes.length],
+        x: Math.random(),
+        y: Math.random(),
+        alpha: Math.random(),
+        pulse: 0.03 + Math.random() * 0.02
+      });
+    }
+
+    let dragonX = -180;
+    let dragonY = 180;
+
+    const bats = [];
+    for (let i = 0; i < 10; i++) {
+      bats.push({
+        x: Math.random() * bgW,
+        y: Math.random() * (bgH * 0.6),
+        speed: Math.random() * 2.5 + 2.5,
+        flapSpeed: Math.random() * 0.2 + 0.15,
+        size: Math.random() * 12 + 10,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    let mummyWalkerX = -80;
+    const hieroglyphs = ['𓀀', '𓋹', '𓁹', '𓊪', '𓃭', '𓅓', '𓈖'];
+    const floatingHiero = [];
+    for (let i = 0; i < 18; i++) {
+      floatingHiero.push({
+        char: hieroglyphs[i % hieroglyphs.length],
+        x: Math.random(),
+        y: Math.random(),
+        speed: 0.0008 + Math.random() * 0.001,
+        size: Math.random() * 18 + 20
+      });
+    }
+
+    const spotlights = [
+      { baseAngle: -0.3, speed: 0.02, color: 'rgba(245, 158, 11, 0.18)' },
+      { baseAngle: 0.3, speed: -0.018, color: 'rgba(236, 72, 153, 0.18)' },
+      { baseAngle: -0.6, speed: 0.025, color: 'rgba(56, 189, 248, 0.18)' },
+      { baseAngle: 0.6, speed: -0.022, color: 'rgba(168, 85, 247, 0.18)' }
+    ];
+    const confetti = [];
+    for (let i = 0; i < 50; i++) {
+      confetti.push({
+        x: Math.random() * bgW,
+        y: Math.random() * bgH,
+        vy: Math.random() * 2 + 1.2,
+        vx: (Math.random() - 0.5) * 1.5,
+        size: Math.random() * 7 + 4,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.08,
+        color: ['#fbbf24', '#f59e0b', '#ec4899', '#38bdf8', '#a855f7', '#10b981'][Math.floor(Math.random() * 6)]
+      });
+    }
+
+    const matrixChars = "01010101XYZΩΨ⌘⚡∞";
+    const matrixDrops = [];
+    const matrixColCount = Math.floor(window.innerWidth / 24);
+    for (let i = 0; i < matrixColCount; i++) {
+      matrixDrops[i] = Math.floor(Math.random() * -50);
+    }
+
+    function renderBackground() {
+      animTime += 0.03;
+      bgCtx.clearRect(0, 0, bgW, bgH);
+
+      if (currentTool === 'unicorn') {
+        const grad = bgCtx.createRadialGradient(bgW * 0.5, bgH * 0.4, 50, bgW * 0.5, bgH * 0.5, bgW * 0.8);
+        grad.addColorStop(0, '#24103a');
+        grad.addColorStop(0.6, '#130922');
+        grad.addColorStop(1, '#07030c');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        bgStars.forEach(st => {
+          const a = 0.3 + 0.7 * Math.sin(animTime * st.twinkleSpeed * 10 + st.phase);
+          bgCtx.save();
+          bgCtx.globalAlpha = Math.max(0, a);
+          bgCtx.fillStyle = st.color;
+          bgCtx.shadowColor = st.color;
+          bgCtx.shadowBlur = 8;
+          bgCtx.beginPath();
+          bgCtx.arc(st.x * bgW, st.y * bgH, st.size, 0, Math.PI * 2);
+          bgCtx.fill();
+          bgCtx.restore();
+        });
+
+        unicornX += 3.2;
+        unicornY = 160 + Math.sin(animTime * 1.2) * 55;
+        if (unicornX > bgW + 160) unicornX = -180;
+
+        bgCtx.save();
+        bgCtx.lineWidth = 9;
+        bgCtx.lineCap = 'round';
+        const colors = ['#f43f5e', '#fb923c', '#facc15', '#4ade80', '#38bdf8', '#c084fc'];
+        for (let c = 0; c < colors.length; c++) {
+          bgCtx.strokeStyle = colors[c];
+          bgCtx.globalAlpha = 0.45;
+          bgCtx.beginPath();
+          const trailLen = 220;
+          bgCtx.moveTo(unicornX - 30, unicornY + c * 3);
+          for (let i = 1; i <= 20; i++) {
+            const tx = unicornX - 30 - (i / 20) * trailLen;
+            const ty = unicornY + c * 3 + Math.sin(animTime * 1.2 - i * 0.3) * (35 + i * 2);
+            bgCtx.lineTo(tx, ty);
+          }
+          bgCtx.stroke();
+        }
+        bgCtx.restore();
+
+        bgCtx.save();
+        bgCtx.translate(unicornX, unicornY);
+        const wingAngle = Math.sin(animTime * 3.5) * 0.65;
+
+        bgCtx.fillStyle = '#ffffff';
+        bgCtx.shadowColor = '#f472b6';
+        bgCtx.shadowBlur = 15;
+        bgCtx.beginPath();
+        bgCtx.ellipse(0, 0, 38, 18, 0, 0, Math.PI * 2);
+        bgCtx.fill();
+
+        bgCtx.beginPath();
+        bgCtx.moveTo(25, -6);
+        bgCtx.lineTo(44, -30);
+        bgCtx.lineTo(58, -24);
+        bgCtx.lineTo(42, 6);
+        bgCtx.closePath();
+        bgCtx.fill();
+
+        bgCtx.beginPath();
+        bgCtx.ellipse(54, -26, 12, 8, -0.3, 0, Math.PI * 2);
+        bgCtx.fill();
+
+        bgCtx.beginPath();
+        bgCtx.moveTo(60, -32);
+        bgCtx.lineTo(84, -48);
+        bgCtx.lineTo(65, -28);
+        bgCtx.closePath();
+        bgCtx.fillStyle = '#fef08a';
+        bgCtx.shadowColor = '#facc15';
+        bgCtx.shadowBlur = 12;
+        bgCtx.fill();
+
+        bgCtx.save();
+        bgCtx.translate(4, -8);
+        bgCtx.rotate(wingAngle);
+        bgCtx.beginPath();
+        bgCtx.moveTo(0, 0);
+        bgCtx.quadraticCurveTo(-15, -45, 10, -50);
+        bgCtx.quadraticCurveTo(35, -45, 25, 0);
+        bgCtx.closePath();
+        bgCtx.fillStyle = '#fbcfe8';
+        bgCtx.shadowColor = '#ec4899';
+        bgCtx.shadowBlur = 15;
+        bgCtx.fill();
+        bgCtx.restore();
+
+        bgCtx.beginPath();
+        bgCtx.moveTo(-36, 0);
+        bgCtx.quadraticCurveTo(-65, Math.sin(animTime * 2) * 15, -75, 20);
+        bgCtx.quadraticCurveTo(-55, 30, -32, 10);
+        bgCtx.fillStyle = '#c084fc';
+        bgCtx.fill();
+        bgCtx.restore();
+
+      } else if (currentTool === 'wand') {
+        const grad = bgCtx.createRadialGradient(bgW * 0.5, bgH * 0.3, 40, bgW * 0.5, bgH * 0.5, bgW * 0.8);
+        grad.addColorStop(0, '#1c1328');
+        grad.addColorStop(0.6, '#0f0817');
+        grad.addColorStop(1, '#050308');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        floatingCandles.forEach(c => {
+          const cy = (c.baseY * bgH) + Math.sin(animTime * 1.5 + c.phase) * 18;
+          const cx = c.x * bgW;
+          bgCtx.save();
+          bgCtx.fillStyle = 'rgba(254, 243, 199, 0.7)';
+          bgCtx.fillRect(cx - 3, cy, 6, 26);
+          bgCtx.fillStyle = '#000000';
+          bgCtx.fillRect(cx - 0.5, cy - 4, 1, 4);
+
+          const flickerSize = 5 + Math.sin(animTime * 8 + c.flicker) * 1.5;
+          bgCtx.fillStyle = '#f59e0b';
+          bgCtx.shadowColor = '#fbbf24';
+          bgCtx.shadowBlur = 16;
+          bgCtx.beginPath();
+          bgCtx.ellipse(cx, cy - 8, flickerSize * 0.6, flickerSize, 0, 0, Math.PI * 2);
+          bgCtx.fill();
+          bgCtx.restore();
+        });
+
+        snitchX += snitchVx;
+        snitchY += snitchVy;
+        if (snitchX < 60 || snitchX > bgW - 60) snitchVx = -snitchVx;
+        if (snitchY < 60 || snitchY > bgH - 60) snitchVy = -snitchVy;
+
+        bgCtx.save();
+        bgCtx.translate(snitchX, snitchY);
+        bgCtx.fillStyle = '#fbbf24';
+        bgCtx.shadowColor = '#f59e0b';
+        bgCtx.shadowBlur = 18;
+        bgCtx.beginPath();
+        bgCtx.arc(0, 0, 8, 0, Math.PI * 2);
+        bgCtx.fill();
+
+        const wingFlutter = Math.sin(animTime * 18) * 12;
+        bgCtx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        bgCtx.beginPath();
+        bgCtx.ellipse(-14, wingFlutter, 14, 4, -0.3, 0, Math.PI * 2);
+        bgCtx.ellipse(14, -wingFlutter, 14, 4, 0.3, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.restore();
+
+      } else if (currentTool === 'pen') {
+        const grad = bgCtx.createLinearGradient(0, 0, bgW, bgH);
+        grad.addColorStop(0, '#1c140e');
+        grad.addColorStop(0.5, '#0f0a07');
+        grad.addColorStop(1, '#050302');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        floatingLetters.forEach(item => {
+          item.y -= item.speed;
+          if (item.y < -0.1) item.y = 1.1;
+          item.rot += item.rotSpeed;
+
+          bgCtx.save();
+          bgCtx.translate(item.x * bgW, item.y * bgH);
+          bgCtx.rotate(item.rot);
+          bgCtx.font = `italic ${item.size}px Georgia, serif`;
+          bgCtx.fillStyle = 'rgba(245, 158, 11, 0.28)';
+          bgCtx.shadowColor = '#d97706';
+          bgCtx.shadowBlur = 12;
+          bgCtx.fillText(item.char, 0, 0);
+          bgCtx.restore();
+        });
+
+      } else if (currentTool === 'hammer') {
+        const grad = bgCtx.createLinearGradient(0, 0, 0, bgH);
+        grad.addColorStop(0, '#0f172a');
+        grad.addColorStop(0.7, '#070b14');
+        grad.addColorStop(1, '#03050a');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        if (Math.random() < 0.02) stormFlashAlpha = 0.55;
+        if (stormFlashAlpha > 0) {
+          bgCtx.fillStyle = `rgba(56, 189, 248, ${stormFlashAlpha})`;
+          bgCtx.fillRect(0, 0, bgW, bgH);
+          stormFlashAlpha -= 0.05;
+        }
+
+        floatingRunes.forEach(r => {
+          r.alpha += r.pulse;
+          if (r.alpha > 1 || r.alpha < 0.2) r.pulse = -r.pulse;
+          bgCtx.save();
+          bgCtx.font = '24px monospace';
+          bgCtx.fillStyle = `rgba(56, 189, 248, ${Math.max(0, r.alpha * 0.4)})`;
+          bgCtx.shadowColor = '#38bdf8';
+          bgCtx.shadowBlur = 14;
+          bgCtx.fillText(r.char, r.x * bgW, r.y * bgH);
+          bgCtx.restore();
+        });
+
+      } else if (currentTool === 'dragon') {
+        const grad = bgCtx.createRadialGradient(bgW * 0.5, bgH * 0.3, 40, bgW * 0.5, bgH * 0.5, bgW * 0.8);
+        grad.addColorStop(0, '#2b0c0c');
+        grad.addColorStop(0.6, '#140505');
+        grad.addColorStop(1, '#070202');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        dragonX += 3.8;
+        dragonY = 170 + Math.sin(animTime * 1.3) * 60;
+        if (dragonX > bgW + 220) dragonX = -220;
+
+        bgCtx.save();
+        bgCtx.translate(dragonX, dragonY);
+        const wingFlap = Math.sin(animTime * 3.2) * 0.7;
+
+        if (Math.sin(animTime * 2.5) > 0.3) {
+          bgCtx.save();
+          bgCtx.beginPath();
+          bgCtx.moveTo(40, -10);
+          bgCtx.lineTo(130, -30 + Math.random() * 20);
+          bgCtx.lineTo(140, 20 + Math.random() * 20);
+          bgCtx.closePath();
+          const fireGrad = bgCtx.createLinearGradient(40, 0, 140, 0);
+          fireGrad.addColorStop(0, '#fef08a');
+          fireGrad.addColorStop(0.5, '#f97316');
+          fireGrad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+          bgCtx.fillStyle = fireGrad;
+          bgCtx.shadowColor = '#ef4444';
+          bgCtx.shadowBlur = 20;
+          bgCtx.fill();
+          bgCtx.restore();
+        }
+
+        bgCtx.fillStyle = '#1c0505';
+        bgCtx.strokeStyle = '#ef4444';
+        bgCtx.lineWidth = 1.5;
+        bgCtx.beginPath();
+        bgCtx.ellipse(0, 0, 48, 18, 0, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.stroke();
+
+        bgCtx.beginPath();
+        bgCtx.moveTo(30, -8);
+        bgCtx.lineTo(58, -26);
+        bgCtx.lineTo(44, 4);
+        bgCtx.closePath();
+        bgCtx.fill();
+        bgCtx.stroke();
+
+        bgCtx.save();
+        bgCtx.translate(-5, -10);
+        bgCtx.rotate(wingFlap);
+        bgCtx.beginPath();
+        bgCtx.moveTo(0, 0);
+        bgCtx.lineTo(-30, -65);
+        bgCtx.lineTo(20, -55);
+        bgCtx.lineTo(45, -15);
+        bgCtx.closePath();
+        bgCtx.fillStyle = '#2d0a0a';
+        bgCtx.fill();
+        bgCtx.stroke();
+        bgCtx.restore();
+        bgCtx.restore();
+
+      } else if (currentTool === 'wednesday') {
+        const grad = bgCtx.createRadialGradient(bgW * 0.8, 120, 30, bgW * 0.8, 120, bgW * 0.7);
+        grad.addColorStop(0, '#241436');
+        grad.addColorStop(0.5, '#0e0817');
+        grad.addColorStop(1, '#050308');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        bgCtx.save();
+        bgCtx.fillStyle = '#f3e8ff';
+        bgCtx.shadowColor = '#c084fc';
+        bgCtx.shadowBlur = 35;
+        bgCtx.beginPath();
+        bgCtx.arc(bgW * 0.82, 130, 55, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.restore();
+
+        bats.forEach(b => {
+          b.x -= b.speed;
+          if (b.x < -40) b.x = bgW + 40;
+          const flap = Math.sin(animTime * 12 + b.phase) * b.size;
+
+          bgCtx.save();
+          bgCtx.translate(b.x, b.y);
+          bgCtx.fillStyle = '#18181b';
+          bgCtx.beginPath();
+          bgCtx.moveTo(0, 0);
+          bgCtx.quadraticCurveTo(-b.size, flap, -b.size * 1.5, 0);
+          bgCtx.quadraticCurveTo(-b.size * 0.8, -flap * 0.5, 0, -4);
+          bgCtx.quadraticCurveTo(b.size * 0.8, -flap * 0.5, b.size * 1.5, 0);
+          bgCtx.quadraticCurveTo(b.size, flap, 0, 0);
+          bgCtx.fill();
+          bgCtx.restore();
+        });
+
+      } else if (currentTool === 'mummy') {
+        const grad = bgCtx.createLinearGradient(0, 0, 0, bgH);
+        grad.addColorStop(0, '#1a1306');
+        grad.addColorStop(0.7, '#0d0903');
+        grad.addColorStop(1, '#050301');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        bgCtx.save();
+        bgCtx.fillStyle = '#1c150a';
+        bgCtx.beginPath();
+        bgCtx.moveTo(60, bgH);
+        bgCtx.lineTo(180, bgH - 120);
+        bgCtx.lineTo(300, bgH);
+        bgCtx.fill();
+
+        bgCtx.beginPath();
+        bgCtx.moveTo(bgW - 320, bgH);
+        bgCtx.lineTo(bgW - 190, bgH - 150);
+        bgCtx.lineTo(bgW - 60, bgH);
+        bgCtx.fill();
+        bgCtx.restore();
+
+        floatingHiero.forEach(h => {
+          h.y -= h.speed;
+          if (h.y < -0.1) h.y = 1.1;
+          bgCtx.save();
+          bgCtx.font = `${h.size}px serif`;
+          bgCtx.fillStyle = 'rgba(251, 191, 36, 0.28)';
+          bgCtx.shadowColor = '#d97706';
+          bgCtx.shadowBlur = 10;
+          bgCtx.fillText(h.char, h.x * bgW, h.y * bgH);
+          bgCtx.restore();
+        });
+
+        mummyWalkerX += 2.2;
+        if (mummyWalkerX > bgW + 80) mummyWalkerX = -80;
+        const slipperHop = Math.abs(Math.sin(animTime * 3)) * 24;
+
+        bgCtx.save();
+        bgCtx.translate(mummyWalkerX, bgH - 60 - slipperHop);
+        bgCtx.fillStyle = '#fef9c3';
+        bgCtx.strokeStyle = '#ca8a04';
+        bgCtx.lineWidth = 2;
+        bgCtx.beginPath();
+        bgCtx.ellipse(0, 0, 32, 16, 0, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.stroke();
+
+        bgCtx.beginPath();
+        bgCtx.moveTo(-20, -10);
+        bgCtx.lineTo(20, 10);
+        bgCtx.moveTo(-10, -14);
+        bgCtx.lineTo(24, 6);
+        bgCtx.stroke();
+
+        bgCtx.fillStyle = '#ffffff';
+        bgCtx.beginPath();
+        bgCtx.arc(12, -4, 4.5, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.fillStyle = '#0f172a';
+        bgCtx.beginPath();
+        bgCtx.arc(13, -4, 2, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.restore();
+
+      } else if (currentTool === 'vijay') {
+        const grad = bgCtx.createRadialGradient(bgW * 0.5, bgH * 0.5, 50, bgW * 0.5, bgH * 0.5, bgW * 0.8);
+        grad.addColorStop(0, '#221406');
+        grad.addColorStop(0.6, '#0f0803');
+        grad.addColorStop(1, '#050301');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        spotlights.forEach((sp, idx) => {
+          const angle = sp.baseAngle + Math.sin(animTime * 1.5 + idx) * 0.45;
+          bgCtx.save();
+          bgCtx.translate(bgW * (0.2 + idx * 0.2), bgH);
+          bgCtx.rotate(angle);
+          bgCtx.fillStyle = sp.color;
+          bgCtx.beginPath();
+          bgCtx.moveTo(0, 0);
+          bgCtx.lineTo(-120, -bgH * 1.4);
+          bgCtx.lineTo(120, -bgH * 1.4);
+          bgCtx.closePath();
+          bgCtx.fill();
+          bgCtx.restore();
+        });
+
+        confetti.forEach(cf => {
+          cf.y += cf.vy;
+          cf.x += cf.vx;
+          cf.rot += cf.rotSpeed;
+          if (cf.y > bgH + 20) cf.y = -20;
+          if (cf.x > bgW + 20) cf.x = -20;
+          if (cf.x < -20) cf.x = bgW + 20;
+
+          bgCtx.save();
+          bgCtx.translate(cf.x, cf.y);
+          bgCtx.rotate(cf.rot);
+          bgCtx.fillStyle = cf.color;
+          bgCtx.shadowColor = cf.color;
+          bgCtx.shadowBlur = 6;
+          bgCtx.fillRect(-cf.size / 2, -cf.size / 2, cf.size, cf.size * 0.6);
+          bgCtx.restore();
+        });
+
+      } else if (currentTool === 'god' || currentTool === 'custom') {
+        const grad = bgCtx.createRadialGradient(bgW * 0.5, bgH * 0.5, 20, bgW * 0.5, bgH * 0.5, bgW * 0.9);
+        grad.addColorStop(0, '#102a24');
+        grad.addColorStop(0.5, '#05130e');
+        grad.addColorStop(1, '#010503');
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+
+        bgCtx.fillStyle = '#00ffcc';
+        bgCtx.font = '14px monospace';
+        bgCtx.shadowColor = '#00ff88';
+        bgCtx.shadowBlur = 10;
+        for (let i = 0; i < matrixDrops.length; i++) {
+          const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+          const x = i * 24;
+          const y = matrixDrops[i] * 18;
+          bgCtx.fillText(char, x, y);
+
+          if (y > bgH && Math.random() > 0.975) {
+            matrixDrops[i] = 0;
+          }
+          matrixDrops[i]++;
+        }
+
+        const coreSize = 70 + Math.sin(animTime * 4) * 20;
+        const coreGrad = bgCtx.createRadialGradient(bgW * 0.5, bgH * 0.5, 5, bgW * 0.5, bgH * 0.5, coreSize * 3);
+        coreGrad.addColorStop(0, 'rgba(0, 255, 204, 0.35)');
+        coreGrad.addColorStop(0.6, 'rgba(168, 85, 247, 0.2)');
+        coreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        bgCtx.fillStyle = coreGrad;
+        bgCtx.fillRect(0, 0, bgW, bgH);
+      }
+
+      requestAnimationFrame(renderBackground);
+    }
+
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playToolSound(type) {
+      if (!isSoundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        if (type === 'wand' || (type === 'custom' && customToolConfig.sound === 'bell')) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(700 + Math.random() * 250, now);
+          osc.frequency.exponentialRampToValueAtTime(1300, now + 0.12);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'unicorn') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(1300 + Math.random() * 400, now);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'pen' || (type === 'custom' && customToolConfig.sound === 'scratch')) {
+          const bufferSize = audioCtx.sampleRate * 0.04;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * 0.04;
+          }
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(3400, now);
+          filter.Q.setValueAtTime(3.5, now);
+          const gain = audioCtx.createGain();
+          gain.gain.setValueAtTime(0.045, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(audioCtx.destination);
+          noise.start(now);
+        } else if (type === 'hammer' || (type === 'custom' && customToolConfig.sound === 'thunder')) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180 + Math.random() * 90, now);
+          osc.frequency.exponentialRampToValueAtTime(45, now + 0.14);
+          gain.gain.setValueAtTime(0.09, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.14);
+        } else if (type === 'dragon' || (type === 'custom' && customToolConfig.sound === 'dragon')) {
+          const bufferSize = audioCtx.sampleRate * 0.12;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * 0.08;
+          }
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(600, now);
+          filter.frequency.linearRampToValueAtTime(120, now + 0.12);
+          const gain = audioCtx.createGain();
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(audioCtx.destination);
+          noise.start(now);
+        } else if (type === 'wednesday') {
+          [now, now + 0.09].forEach(t => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(1800, t);
+            osc.frequency.exponentialRampToValueAtTime(300, t + 0.03);
+            gain.gain.setValueAtTime(0.08, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + 0.03);
+          });
+        } else if (type === 'mummy' || (type === 'custom' && customToolConfig.sound === 'squeak')) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1100, now);
+          osc.frequency.exponentialRampToValueAtTime(450, now + 0.11);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.11);
+        } else if (type === 'vijay' || (type === 'custom' && customToolConfig.sound === 'whistle')) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(2200, now);
+          osc.frequency.linearRampToValueAtTime(3200, now + 0.07);
+          osc.frequency.linearRampToValueAtTime(2600, now + 0.15);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'god' || (type === 'custom' && customToolConfig.sound === 'laser')) {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(440, now);
+          osc1.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          osc2.frequency.setValueAtTime(220, now);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.18);
+          osc2.stop(now + 0.18);
+        }
+      } catch (e) {}
+    }
+
+    const particles = [];
+    const lightningBolts = [];
+
+    class Particle {
+      constructor(x, y, tool) {
+        this.x = x;
+        this.y = y;
+        this.tool = tool;
+        this.life = 1.0;
+        this.decay = 0.025 + Math.random() * 0.035;
+
+        let eff = tool;
+        if (tool === 'custom') eff = customToolConfig.particle;
+
+        if (eff === 'wand' || eff === 'stars') {
+          this.vx = (Math.random() - 0.5) * 3;
+          this.vy = (Math.random() - 0.5) * 3 - 0.8;
+          this.size = Math.random() * 4 + 2;
+          this.color = ['#fde047', '#f43f5e', '#38bdf8', '#a855f7'][Math.floor(Math.random() * 4)];
+        } else if (eff === 'unicorn') {
+          this.vx = (Math.random() - 0.5) * 2;
+          this.vy = Math.random() * 1.8 + 0.4;
+          this.size = Math.random() * 5 + 2.5;
+          this.color = ['#fbcfe8', '#c084fc', '#67e8f9', '#fef08a'][Math.floor(Math.random() * 4)];
+        } else if (eff === 'pen' || eff === 'ink') {
+          this.vx = (Math.random() - 0.5) * 1.2;
+          this.vy = (Math.random() - 0.5) * 1.2;
+          this.size = Math.random() * 2 + 1;
+          this.color = '#38bdf8';
+        } else if (eff === 'hammer') {
+          this.vx = (Math.random() - 0.5) * 6;
+          this.vy = (Math.random() - 0.5) * 6;
+          this.size = Math.random() * 3 + 1;
+          this.color = '#e0f2fe';
+        } else if (eff === 'dragon' || eff === 'fire') {
+          this.vx = (Math.random() - 0.5) * 3.5;
+          this.vy = (Math.random() - 0.5) * 3.5 - 2;
+          this.size = Math.random() * 4 + 2;
+          this.color = ['#ef4444', '#f97316', '#facc15', '#b91c1c'][Math.floor(Math.random() * 4)];
+        } else if (eff === 'wednesday') {
+          this.vx = (Math.random() - 0.5) * 2.5;
+          this.vy = (Math.random() - 0.5) * 2.5;
+          this.size = Math.random() * 4 + 2;
+          this.color = ['#c084fc', '#9333ea', '#581c87', '#38bdf8'][Math.floor(Math.random() * 4)];
+        } else if (eff === 'mummy') {
+          this.vx = (Math.random() - 0.5) * 2;
+          this.vy = (Math.random() - 0.5) * 2 + 0.8;
+          this.size = Math.random() * 3.5 + 1.5;
+          this.color = ['#fef08a', '#fde047', '#ca8a04', '#fed7aa'][Math.floor(Math.random() * 4)];
+        } else if (eff === 'vijay') {
+          this.vx = (Math.random() - 0.5) * 4.5;
+          this.vy = (Math.random() - 0.5) * 4.5 - 1;
+          this.size = Math.random() * 3.5 + 2;
+          this.color = ['#f59e0b', '#fbbf24', '#fef08a', '#ffffff'][Math.floor(Math.random() * 4)];
+        } else if (eff === 'god' || eff === 'matrix' || eff === 'lightning') {
+          this.vx = (Math.random() - 0.5) * 7;
+          this.vy = (Math.random() - 0.5) * 7;
+          this.size = Math.random() * 5 + 2.5;
+          this.color = ['#00ffcc', '#ffffff', '#fbbf24', '#f43f5e', '#38bdf8', '#c084fc'][Math.floor(Math.random() * 6)];
+        }
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.life);
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 10;
+
+        let eff = this.tool;
+        if (this.tool === 'custom') eff = customToolConfig.particle;
+
+        if (eff === 'unicorn' || eff === 'wednesday' || eff === 'god' || eff === 'stars') {
+          const s = this.size * this.life;
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y - s);
+          ctx.quadraticCurveTo(this.x, this.y, this.x + s, this.y);
+          ctx.quadraticCurveTo(this.x, this.y, this.x, this.y + s);
+          ctx.quadraticCurveTo(this.x, this.y, this.x - s, this.y);
+          ctx.quadraticCurveTo(this.x, this.y, this.x, this.y - s);
+          ctx.fill();
+        } else if (eff === 'mummy') {
+          const s = this.size * this.life;
+          ctx.fillRect(this.x - s / 2, this.y - s / 2, s * 1.5, s * 0.8);
+        } else {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    function createLightning(x1, y1, x2, y2, color = '#38bdf8') {
+      const segments = [];
+      const dist = Math.hypot(x2 - x1, y2 - y1);
+      const steps = Math.max(2, Math.floor(dist / 10));
+
+      let curX = x1;
+      let curY = y1;
+
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        const targetX = x1 + (x2 - x1) * t;
+        const targetY = y1 + (y2 - y1) * t;
+        const jitter = (Math.random() - 0.5) * 16;
+        const nextX = targetX + jitter;
+        const nextY = targetY + jitter;
+        segments.push({ x1: curX, y1: curY, x2: nextX, y2: nextY });
+        curX = nextX;
+        curY = nextY;
+      }
+      segments.push({ x1: curX, y1: curY, x2: x2, y2: y2 });
+
+      lightningBolts.push({
+        segments: segments,
+        life: 1.0,
+        decay: 0.15,
+        color: color
+      });
+    }
+
+    function animateFX() {
+      fxCtx.clearRect(0, 0, nbWidth, nbHeight);
+
+      for (let i = lightningBolts.length - 1; i >= 0; i--) {
+        const bolt = lightningBolts[i];
+        bolt.life -= bolt.decay;
+        if (bolt.life <= 0) {
+          lightningBolts.splice(i, 1);
+          continue;
+        }
+        fxCtx.save();
+        fxCtx.shadowColor = bolt.color;
+        fxCtx.shadowBlur = 12;
+        fxCtx.lineWidth = 2.5 * bolt.life;
+        fxCtx.strokeStyle = `rgba(255, 255, 255, ${bolt.life})`;
+        fxCtx.beginPath();
+        bolt.segments.forEach(seg => {
+          fxCtx.moveTo(seg.x1, seg.y1);
+          fxCtx.lineTo(seg.x2, seg.y2);
+        });
+        fxCtx.stroke();
+        fxCtx.restore();
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        } else {
+          p.draw(fxCtx);
+        }
+      }
+
+      requestAnimationFrame(animateFX);
+    }
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let strokeCount = 0;
+
+    function getCanvasCoords(e) {
+      const rect = scratchCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function startStroke(e) {
+      saveUndoState();
+      isDrawing = true;
+      const pos = getCanvasCoords(e);
+      lastX = pos.x;
+      lastY = pos.y;
+      strokeCount = 0;
+      scratch(pos.x, pos.y, pos.x, pos.y);
+      customCursor.classList.add('active-press');
+      playToolSound(currentTool);
+    }
+
+    function moveStroke(e) {
+      const pos = getCanvasCoords(e);
+      if (isDrawing) {
+        scratch(lastX, lastY, pos.x, pos.y);
+        lastX = pos.x;
+        lastY = pos.y;
+        strokeCount++;
+        if (strokeCount % 3 === 0) {
+          playToolSound(currentTool);
+        }
+      }
+    }
+
+    function endStroke() {
+      isDrawing = false;
+      customCursor.classList.remove('active-press');
+    }
+
+    function scratch(x1, y1, x2, y2) {
+      scratchCtx.save();
+      scratchCtx.globalCompositeOperation = 'destination-out';
+      scratchCtx.lineCap = 'round';
+      scratchCtx.lineJoin = 'round';
+      scratchCtx.lineWidth = brushRadius;
+
+      scratchCtx.beginPath();
+      scratchCtx.moveTo(x1, y1);
+      scratchCtx.lineTo(x2, y2);
+      scratchCtx.stroke();
+
+      if (x1 === x2 && y1 === y2) {
+        scratchCtx.beginPath();
+        scratchCtx.arc(x1, y1, brushRadius / 2, 0, Math.PI * 2);
+        scratchCtx.fill();
+      }
+      scratchCtx.restore();
+
+      emitToolEffects(x1, y1, x2, y2);
+    }
+
+    function emitToolEffects(x1, y1, x2, y2) {
+      if (currentTool === 'wand') {
+        for (let i = 0; i < 2; i++) particles.push(new Particle(x2, y2, 'wand'));
+      } else if (currentTool === 'unicorn') {
+        particles.push(new Particle(x2, y2, 'unicorn'));
+      } else if (currentTool === 'pen') {
+        if (Math.random() < 0.25) particles.push(new Particle(x2, y2, 'pen'));
+      } else if (currentTool === 'hammer') {
+        particles.push(new Particle(x2, y2, 'hammer'));
+        if (Math.random() < 0.45) {
+          const offsetX = (Math.random() - 0.5) * 35;
+          const offsetY = (Math.random() - 0.5) * 35;
+          createLightning(x1, y1, x2 + offsetX, y2 + offsetY, '#38bdf8');
+        }
+      } else if (currentTool === 'dragon') {
+        for (let i = 0; i < 3; i++) particles.push(new Particle(x2, y2, 'dragon'));
+      } else if (currentTool === 'wednesday') {
+        for (let i = 0; i < 2; i++) particles.push(new Particle(x2, y2, 'wednesday'));
+      } else if (currentTool === 'mummy') {
+        for (let i = 0; i < 2; i++) particles.push(new Particle(x2, y2, 'mummy'));
+      } else if (currentTool === 'vijay') {
+        for (let i = 0; i < 3; i++) particles.push(new Particle(x2, y2, 'vijay'));
+      } else if (currentTool === 'god') {
+        for (let i = 0; i < 5; i++) particles.push(new Particle(x2, y2, 'god'));
+        if (Math.random() < 0.55) {
+          const offsetX = (Math.random() - 0.5) * 45;
+          const offsetY = (Math.random() - 0.5) * 45;
+          createLightning(x1, y1, x2 + offsetX, y2 + offsetY, '#00ffcc');
+        }
+      } else if (currentTool === 'custom') {
+        for (let i = 0; i < 4; i++) particles.push(new Particle(x2, y2, 'custom'));
+        if (customToolConfig.particle === 'lightning' && Math.random() < 0.5) {
+          createLightning(x1, y1, x2 + (Math.random() - 0.5) * 40, y2 + (Math.random() - 0.5) * 40, '#f59e0b');
+        }
+      }
+    }
+
+    const customCursor = document.getElementById('custom-cursor');
+    const notebookWrapper = document.getElementById('notebookWrapper');
+
+    function updateCursorVisual(tool) {
+      customCursor.innerHTML = cursorSVGs[tool] || cursorSVGs.wand;
+      const displayElem = document.getElementById('currentToolDisplay');
+      displayElem.textContent = toolDetails[tool].name;
+      displayElem.classList.toggle('dev-badge', tool === 'god' || tool === 'custom');
+    }
+
+    notebookWrapper.addEventListener('mouseenter', () => {
+      customCursor.style.display = 'block';
+    });
+    notebookWrapper.addEventListener('mouseleave', () => {
+      if (!isGhostDrawing) customCursor.style.display = 'none';
+      endStroke();
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isGhostDrawing) {
+        customCursor.style.left = `${e.clientX - 6}px`;
+        customCursor.style.top = `${e.clientY - 6}px`;
+
+        if (currentTool === 'god' && Math.random() < 0.25) {
+          const rect = scratchCanvas.getBoundingClientRect();
+          const rx = e.clientX - rect.left;
+          const ry = e.clientY - rect.top;
+          if (rx >= 0 && rx <= nbWidth && ry >= 0 && ry <= nbHeight) {
+            particles.push(new Particle(rx, ry, 'god'));
+          }
+        }
+      }
+    });
+
+    scratchCanvas.addEventListener('mousedown', startStroke);
+    window.addEventListener('mousemove', moveStroke);
+    window.addEventListener('mouseup', endStroke);
+
+    scratchCanvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startStroke(e);
+    }, { passive: false });
+    window.addEventListener('touchmove', (e) => {
+      if (isDrawing) {
+        e.preventDefault();
+        moveStroke(e);
+      }
+    }, { passive: false });
+    window.addEventListener('touchend', endStroke);
+
+    const toolModal = document.getElementById('toolModal');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const startDrawingBtn = document.getElementById('startDrawingBtn');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    function selectTool(tool) {
+      currentTool = tool;
+      toolCards.forEach(c => {
+        c.classList.toggle('selected', c.getAttribute('data-tool') === tool);
+      });
+      updateCursorVisual(tool);
+    }
+
+    toolCards.forEach(card => {
+      card.addEventListener('click', () => {
+        selectTool(card.getAttribute('data-tool'));
+        playToolSound(currentTool);
+      });
+    });
+
+    function closeModal() {
+      toolModal.classList.add('hidden');
+      initAudio();
+    }
+
+    openModalBtn.addEventListener('click', () => {
+      toolModal.classList.remove('hidden');
+    });
+
+    startDrawingBtn.addEventListener('click', closeModal);
+
+    const sizeBtns = document.querySelectorAll('.size-btn');
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        brushRadius = parseInt(btn.getAttribute('data-size'), 10);
+      });
+    });
+
+    const headerGhostBtn = document.getElementById('headerGhostBtn');
+    const headerCustomToolBtn = document.getElementById('headerCustomToolBtn');
+    if (headerGhostBtn) {
+      headerGhostBtn.addEventListener('click', () => {
+        ghostModal.classList.add('active');
+      });
+    }
+    if (headerCustomToolBtn) {
+      headerCustomToolBtn.addEventListener('click', () => {
+        customToolModal.classList.add('active');
+      });
+    }
+
+    // DEVELOPER GOD MODE UNLOCK LOGIC
+    const brandTitle = document.getElementById('brandTitle');
+    const devToast = document.getElementById('devToast');
+    const devHud = document.getElementById('devHud');
+    const godModeCard = document.getElementById('godModeCard');
+    const passcodeModal = document.getElementById('passcodeModal');
+    const passcodeInput = document.getElementById('passcodeInput');
+    const submitPasscodeBtn = document.getElementById('submitPasscodeBtn');
+    const cancelPasscodeBtn = document.getElementById('cancelPasscodeBtn');
+    const relockBtn = document.getElementById('relockBtn');
+
+    let titleClickCount = 0;
+    let titleClickTimer = null;
+    let keyBuffer = "";
+
+    function openPasscodeModal() {
+      passcodeModal.classList.add('active');
+      passcodeInput.value = "";
+      setTimeout(() => passcodeInput.focus(), 100);
+    }
+
+    function closePasscodeModal() {
+      passcodeModal.classList.remove('active');
+    }
+
+    cancelPasscodeBtn.addEventListener('click', closePasscodeModal);
+
+    function checkPasscode() {
+      const code = passcodeInput.value.trim().toLowerCase();
+      if (code === 'god' || code === 'dev' || code === '1234' || code === 'kishore') {
+        closePasscodeModal();
+        unlockGodMode();
+      } else {
+        passcodeInput.style.borderColor = '#ef4444';
+        passcodeInput.value = '';
+        passcodeInput.placeholder = 'ACCESS DENIED';
+        setTimeout(() => {
+          passcodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
+          passcodeInput.placeholder = 'PASSCODE';
+        }, 1200);
+      }
+    }
+
+    submitPasscodeBtn.addEventListener('click', checkPasscode);
+    passcodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkPasscode();
+      if (e.key === 'Escape') closePasscodeModal();
+    });
+
+    function unlockGodMode() {
+      if (isGodModeUnlocked) return;
+      isGodModeUnlocked = true;
+
+      godModeCard.classList.add('revealed');
+      devHud.classList.add('active');
+
+      devToast.classList.add('show');
+      setTimeout(() => devToast.classList.remove('show'), 3800);
+
+      initAudio();
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.35);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } catch (e) {}
+
+      selectTool('god');
+    }
+
+    function relockGodMode() {
+      isGodModeUnlocked = false;
+      godModeCard.classList.remove('revealed');
+      devHud.classList.remove('active');
+      selectTool('unicorn');
+      alert("🔒 Developer God Mode has been locked.");
+    }
+
+    relockBtn.addEventListener('click', relockGodMode);
+
+    brandTitle.addEventListener('click', () => {
+      titleClickCount++;
+      clearTimeout(titleClickTimer);
+      titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 2000);
+
+      if (titleClickCount >= 5) {
+        titleClickCount = 0;
+        openPasscodeModal();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '`' || e.key === '~') {
+        e.preventDefault();
+        openPasscodeModal();
+      }
+
+      keyBuffer += e.key.toLowerCase();
+      if (keyBuffer.length > 5) keyBuffer = keyBuffer.slice(-5);
+      if (keyBuffer.endsWith('god')) {
+        unlockGodMode();
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key.toLowerCase() === 'g' || e.key.toLowerCase() === 'd')) {
+        e.preventDefault();
+        openPasscodeModal();
+      }
+
+      if ((e.key === '9' || e.key === '0') && isGodModeUnlocked) {
+        selectTool('god');
+        playToolSound('god');
+      }
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('god') === '1' || urlParams.get('dev') === '1') {
+      setTimeout(unlockGodMode, 600);
+    }
+
+    document.getElementById('godAutoFillBtn').addEventListener('click', () => {
+      saveUndoState();
+      scratchCtx.save();
+      scratchCtx.globalCompositeOperation = 'destination-out';
+      scratchCtx.fillRect(0, 0, nbWidth, nbHeight);
+      scratchCtx.restore();
+      playToolSound('god');
+    });
+
+    document.getElementById('godLaserBtn').addEventListener('click', () => {
+      brushRadius = 1;
+      sizeBtns.forEach(b => b.classList.remove('active'));
+    });
+
+    document.getElementById('godMegaBtn').addEventListener('click', () => {
+      brushRadius = 50;
+      sizeBtns.forEach(b => b.classList.remove('active'));
+    });
+
+    document.getElementById('godEquipBtn').addEventListener('click', () => {
+      selectTool('god');
+      playToolSound('god');
+    });
+
+    document.getElementById('godSpectrumBtn').addEventListener('click', () => {
+      spectrumPresetIndex++;
+      renderRainbowLayer();
+      playToolSound('god');
+    });
+
+    // CUSTOM INSTRUMENT CREATOR LOGIC
+    const customToolModal = document.getElementById('customToolModal');
+    const openCustomToolBtn = document.getElementById('openCustomToolBtn');
+    const closeCustomToolBtn = document.getElementById('closeCustomToolBtn');
+    const forgeCustomToolBtn = document.getElementById('forgeCustomToolBtn');
+    const customNameInput = document.getElementById('customNameInput');
+    const customIconInput = document.getElementById('customIconInput');
+    const customParticleSelect = document.getElementById('customParticleSelect');
+    const customSoundSelect = document.getElementById('customSoundSelect');
+
+    openCustomToolBtn.addEventListener('click', () => {
+      customToolModal.classList.add('active');
+    });
+    closeCustomToolBtn.addEventListener('click', () => {
+      customToolModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('.emoji-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        customIconInput.value = chip.getAttribute('data-emoji');
+      });
+    });
+
+    forgeCustomToolBtn.addEventListener('click', () => {
+      const name = customNameInput.value.trim() || "Custom Instrument";
+      const icon = customIconInput.value.trim() || "⚡";
+      const particle = customParticleSelect.value;
+      const sound = customSoundSelect.value;
+
+      customToolConfig = { name, icon, particle, sound };
+
+      cursorSVGs.custom = `
+        <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="6" r="6" fill="#fbbf24" filter="drop-shadow(0 0 10px #f59e0b)"/>
+          <text x="18" y="52" font-size="44" filter="drop-shadow(0 4px 10px rgba(0,0,0,0.8))">${icon}</text>
+          <path d="M6 6 L22 22" stroke="#f59e0b" stroke-width="3" stroke-dasharray="3,3"/>
+        </svg>
+      `;
+
+      toolDetails.custom = {
+        name: `🛠️ ${name} [CUSTOM]`,
+        bgTheme: "Matrix Cyber Nebula [DEV]"
+      };
+
+      let customCard = document.getElementById('customToolCard');
+      if (!customCard) {
+        customCard = document.createElement('div');
+        customCard.id = 'customToolCard';
+        customCard.className = 'tool-card selected';
+        customCard.setAttribute('data-tool', 'custom');
+        document.getElementById('toolsGrid').appendChild(customCard);
+      }
+      customCard.innerHTML = `
+        <div class="dev-tag">CUSTOM</div>
+        <div class="tool-icon-wrapper">${icon}</div>
+        <h3>${name}</h3>
+        <span>Custom forged instrument with ${particle} & ${sound}.</span>
+      `;
+      customCard.addEventListener('click', () => {
+        selectTool('custom');
+        playToolSound('custom');
+      });
+
+      customToolModal.classList.remove('active');
+      selectTool('custom');
+      playToolSound('custom');
+      alert(`🎉 Custom Instrument "${name}" forged and equipped!`);
+    });
+
+    // GHOST PEN AUTOMATION LOGIC
+    const ghostModal = document.getElementById('ghostModal');
+    const openGhostModalBtn = document.getElementById('openGhostModalBtn');
+    const closeGhostModalBtn = document.getElementById('closeGhostModalBtn');
+    const startCustomGhostBtn = document.getElementById('startCustomGhostBtn');
+    const ghostCustomTextInput = document.getElementById('ghostCustomTextInput');
+    const ghostDelaySelect = document.getElementById('ghostDelaySelect');
+    const ghostStatus = document.getElementById('ghostStatus');
+    const stopGhostBtn = document.getElementById('stopGhostBtn');
+
+    let isGhostDrawing = false;
+    let ghostAnimId = null;
+
+    openGhostModalBtn.addEventListener('click', () => {
+      ghostModal.classList.add('active');
+    });
+    closeGhostModalBtn.addEventListener('click', () => {
+      ghostModal.classList.remove('active');
+    });
+
+    stopGhostBtn.addEventListener('click', stopGhostDrawing);
+
+    function stopGhostDrawing() {
+      isGhostDrawing = false;
+      if (ghostAnimId) cancelAnimationFrame(ghostAnimId);
+      ghostStatus.classList.remove('active');
+      endStroke();
+    }
+
+    function generateGhostPath(preset, customText = "") {
+      const cx = nbWidth / 2;
+      const cy = nbHeight / 2;
+      const strokes = [];
+
+      if (preset === 'dreamcatcher') {
+        const ringPts = [];
+        const r = Math.min(nbWidth, nbHeight) * 0.28;
+        const topY = cy - 60;
+        for (let a = 0; a <= Math.PI * 2 + 0.1; a += 0.12) {
+          ringPts.push({ x: cx + Math.cos(a) * r, y: topY + Math.sin(a) * r });
+        }
+        strokes.push(ringPts);
+
+        for (let i = 0; i < 8; i++) {
+          const petal = [];
+          const a1 = (i / 8) * Math.PI * 2;
+          const a2 = ((i + 1) / 8) * Math.PI * 2;
+          const midA = (a1 + a2) / 2;
+          petal.push({ x: cx + Math.cos(a1) * r, y: topY + Math.sin(a1) * r });
+          petal.push({ x: cx + Math.cos(midA) * (r * 0.45), y: topY + Math.sin(midA) * (r * 0.45) });
+          petal.push({ x: cx + Math.cos(a2) * r, y: topY + Math.sin(a2) * r });
+          strokes.push(petal);
+        }
+
+        [-r * 0.55, 0, r * 0.55].forEach((offset, idx) => {
+          const stringPts = [];
+          const startX = cx + offset;
+          const startY = topY + r;
+          const len = 140 + (idx === 1 ? 40 : 0);
+          for (let y = startY; y <= startY + len; y += 10) {
+            stringPts.push({ x: startX + Math.sin((y - startY) * 0.05) * 4, y: y });
+          }
+          strokes.push(stringPts);
+
+          const featherPts = [];
+          const fy = startY + len;
+          for (let py = 0; py <= 60; py += 6) {
+            const spread = Math.sin((py / 60) * Math.PI) * 16;
+            featherPts.push({ x: startX - spread, y: fy + py });
+            featherPts.push({ x: startX + spread, y: fy + py });
+            featherPts.push({ x: startX, y: fy + py });
+          }
+          strokes.push(featherPts);
+        });
+
+        for (let i = 0; i < 16; i++) {
+          const sx = cx + (Math.random() - 0.5) * (r * 2.8);
+          const sy = (Math.random()) * (nbHeight * 0.9);
+          strokes.push([{ x: sx, y: sy }, { x: sx, y: sy }]);
+        }
+
+      } else if (preset === 'dreamtext' || customText) {
+        const txt = customText || "Dream your, Dream";
+        const off = document.createElement('canvas');
+        off.width = nbWidth;
+        off.height = nbHeight;
+        const octx = off.getContext('2d');
+        octx.fillStyle = '#ffffff';
+        octx.font = 'bold 36px cursive, Georgia, serif';
+        octx.textAlign = 'center';
+        octx.textBaseline = 'middle';
+        octx.fillText(txt, cx, cy);
+
+        const idata = octx.getImageData(0, 0, nbWidth, nbHeight).data;
+        const points = [];
+        for (let y = 0; y < nbHeight; y += 6) {
+          for (let x = 0; x < nbWidth; x += 6) {
+            const idx = (y * nbWidth + x) * 4;
+            if (idata[idx + 3] > 140) {
+              points.push({ x, y });
+            }
+          }
+        }
+        for (let i = 0; i < points.length; i += 3) {
+          strokes.push([points[i], points[Math.min(points.length - 1, i + 1)]]);
+        }
+
+      } else if (preset === 'galaxy') {
+        const spiralPts = [];
+        for (let t = 0; t <= Math.PI * 6; t += 0.15) {
+          const sr = t * 15;
+          spiralPts.push({ x: cx + Math.cos(t) * sr, y: cy + Math.sin(t) * sr });
+        }
+        strokes.push(spiralPts);
+
+        const moonPts = [];
+        const mx = cx + 110;
+        const my = cy - 130;
+        for (let a = -1.5; a <= 1.5; a += 0.1) {
+          moonPts.push({ x: mx + Math.cos(a) * 35, y: my + Math.sin(a) * 35 });
+        }
+        for (let a = 1.5; a >= -1.5; a -= 0.1) {
+          moonPts.push({ x: mx + 12 + Math.cos(a) * 26, y: my + Math.sin(a) * 26 });
+        }
+        strokes.push(moonPts);
+      }
+
+      return strokes;
+    }
+
+    function launchGhostDrawing(strokes, delaySec = 0) {
+      ghostModal.classList.remove('active');
+      initAudio();
+
+      if (delaySec > 0) {
+        let count = delaySec;
+        devToast.innerHTML = `<span>👻 Ghost arriving in ${count}... (Hand to friend!)</span>`;
+        devToast.classList.add('show');
+        const timer = setInterval(() => {
+          count--;
+          if (count > 0) {
+            devToast.innerHTML = `<span>👻 Ghost arriving in ${count}... (Hand to friend!)</span>`;
+          } else {
+            clearInterval(timer);
+            devToast.classList.remove('show');
+            runGhostAnimation(strokes);
+          }
+        }, 1000);
+      } else {
+        runGhostAnimation(strokes);
+      }
+    }
+
+    function runGhostAnimation(strokes) {
+      isGhostDrawing = true;
+      ghostStatus.classList.add('active');
+      customCursor.style.display = 'block';
+
+      let strokeIdx = 0;
+      let ptIdx = 0;
+      let lastGhostX = strokes[0][0].x;
+      let lastGhostY = strokes[0][0].y;
+
+      function step() {
+        if (!isGhostDrawing) return;
+
+        if (strokeIdx >= strokes.length) {
+          stopGhostDrawing();
+          devToast.innerHTML = `<span>✨ Ghost Drawing Complete!</span>`;
+          devToast.classList.add('show');
+          setTimeout(() => devToast.classList.remove('show'), 3000);
+          return;
+        }
+
+        const currentStroke = strokes[strokeIdx];
+        const targetPt = currentStroke[ptIdx];
+
+        const rect = scratchCanvas.getBoundingClientRect();
+        customCursor.style.left = `${rect.left + targetPt.x - 6}px`;
+        customCursor.style.top = `${rect.top + targetPt.y - 6}px`;
+
+        if (ptIdx === 0) {
+          scratch(targetPt.x, targetPt.y, targetPt.x, targetPt.y);
+          lastGhostX = targetPt.x;
+          lastGhostY = targetPt.y;
+        } else {
+          scratch(lastGhostX, lastGhostY, targetPt.x, targetPt.y);
+          lastGhostX = targetPt.x;
+          lastGhostY = targetPt.y;
+        }
+
+        if (Math.random() < 0.3) playToolSound(currentTool);
+
+        ptIdx++;
+        if (ptIdx >= currentStroke.length) {
+          strokeIdx++;
+          ptIdx = 0;
+        }
+
+        ghostAnimId = requestAnimationFrame(step);
+      }
+
+      ghostAnimId = requestAnimationFrame(step);
+    }
+
+    document.querySelectorAll('.ghost-preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const preset = btn.getAttribute('data-preset');
+        const delay = parseInt(ghostDelaySelect.value, 10);
+        const strokes = generateGhostPath(preset);
+        launchGhostDrawing(strokes, delay);
+      });
+    });
+
+    startCustomGhostBtn.addEventListener('click', () => {
+      const text = ghostCustomTextInput.value.trim() || "Magic";
+      const delay = parseInt(ghostDelaySelect.value, 10);
+      const strokes = generateGhostPath('custom', text);
+      launchGhostDrawing(strokes, delay);
+    });
+
+    const keyToTool = {
+      '1': 'wand',
+      '2': 'unicorn',
+      '3': 'pen',
+      '4': 'hammer',
+      '5': 'dragon',
+      '6': 'wednesday',
+      '7': 'mummy',
+      '8': 'vijay'
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (keyToTool[e.key]) {
+        selectTool(keyToTool[e.key]);
+        playToolSound(currentTool);
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        undo();
+      }
+      if (e.key.toLowerCase() === 'c') resetpreventDefault();
+        undo();
+      }
+      if (e.key.toLowerCase() === 'c') resetScratchLayer();
+      if (e.key === 'Escape') {
+        closeModal();
+        closePasscodeModal();
+        customToolModal.classList.remove('active');
+        ghostModal.classList.remove('active');
+        stopGhostDrawing();
+      }
+    });
+
+    document.getElementById('undoBtn').addEventListener('click', undo);
+
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    soundToggleBtn.addEventListener('click', () => {
+      isSoundEnabled = !isSoundEnabled;
+      document.getElementById('soundIcon').textContent = isSoundEnabled ? '🔊' : '🔇';
+      if (isSoundEnabled) initAudio();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      resetScratchLayer();
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = nbWidth;
+      exportCanvas.height = nbHeight;
+      const expCtx = exportCanvas.getContext('2d');
+
+      expCtx.drawImage(rainbowCanvas, 0, 0);
+      expCtx.drawImage(scratchCanvas, 0, 0);
+
+      const link = document.createElement('a');
+      link.download = 'rainbow-scratch-art.png';
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
+    });
+
+    window.addEventListener('resize', () => {
+      resizeBgCanvas();
+      resizeNotebookCanvases();
+    });
+
+    resizeBgCanvas();
+    resizeNotebookCanvases();
+    selectTool('unicorn');
+    animateFX();
+    renderBackground();
+  </script>
